@@ -1,1 +1,2 @@
 # BevStock
+Beverage inventory management
