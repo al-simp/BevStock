@@ -24,6 +24,8 @@ app.use("/products", require("./routes/products"))
 
 app.use("/inventory", require("./routes/inventory"))
 
+app.use("/stocktake", require("./routes/stocktake"));
+
 
 
 app.listen(5000, () => {

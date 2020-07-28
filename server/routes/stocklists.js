@@ -68,7 +68,7 @@ router.get("/list/:id", authorisation, async (req, res) => {
 router.post("/addproduct", async (req,res) => {
     try {
         const { productId, listId } = req.body;
-        const addProduct = await pool.query("INSERT INTO product_stocklist (product_id, stocklist_id, quantity) VALUES ($1, $2, '0') RETURNING *", [productId, listId]);
+        const addProduct = await pool.query("INSERT INTO product_stocklist (product_id, stocklist_id) VALUES ($1, $2) RETURNING *", [productId, listId]);
         res.json(addProduct);
     } catch (err) {
         console.error(err.message);
@@ -119,7 +119,16 @@ router.post("/addpartial/", async (req, res) => {
     }
 })
 
-//get a product name from the ID
+//get a product quantity for a product that has already been counted as part of the stocktake. 
+router.post("/productquantity/", async (req, res) => {
+    try {
+        const {id, stocktake } = req.body;
+        const getQuantity = await pool.query("SELECT quantity FROM stocktake_quantity WHERE product_stocklist_id = $1 AND stocktake = $2", [id, stocktake]);
+        res.json(getQuantity);
+    } catch (error) {
+        console.error(error.message);
+    }
+})
 
 
 module.exports = router;
