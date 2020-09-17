@@ -2,6 +2,16 @@ import React, { Fragment, useState } from "react";
 import { toast } from "react-toastify";
 
 const EditTeamMember = ({ member, setTeamChange }) => {
+
+
+  const [name, setName] = useState(member.user_name);
+  const [email, setEmail] = useState(member.user_email);
+  
+  const setDetails = (username, email) => {
+    setName(username);
+    setEmail(email)
+  }
+
   const editDetails = async id => {
     try {
       const body = { name, email };
@@ -30,10 +40,6 @@ const EditTeamMember = ({ member, setTeamChange }) => {
   };
   
 
-  const [name, setName] = useState(member.user_name);
-  const [email, setEmail] = useState(member.user_email);
-  
-
   return (
     <Fragment>
       <button
@@ -58,7 +64,7 @@ const EditTeamMember = ({ member, setTeamChange }) => {
                 type="button"
                 className="close"
                 data-dismiss="modal"
-                onClick={() => setName(member.user_name), () => setEmail(member.user_email)}
+                onClick={() => setDetails(member.user_name, member.user_email)}
               >
                 &times;
               </button>
@@ -91,7 +97,7 @@ const EditTeamMember = ({ member, setTeamChange }) => {
                 type="button"
                 className="btn btn-danger"
                 data-dismiss="modal"
-                onClick={() => setEmail(member.user_email), () => setName(member.user_name)}
+                onClick={() => setDetails(member.user_email, member.user_name)}
               >
                 Close
               </button>

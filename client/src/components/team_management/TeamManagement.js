@@ -8,6 +8,7 @@ const TeamManagement = () => {
     const [allTeamMembers, setTeamMembers] = useState([]);
     const [teamChange, setTeamChange] = useState(false);
 
+    // get the team members from the db to populate allTeamMembers array
     const getTeam = async () => {
         try {
             const response = await fetch("http://localhost:5000/teammanagement/", {
@@ -30,7 +31,7 @@ const TeamManagement = () => {
     }, [teamChange]);
 
     return (
-        <main role="main">
+      <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">F
           <div className="jumbotron">
             <div className="container">
               <h1 className="display-3">Team Management</h1>

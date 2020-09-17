@@ -37,7 +37,7 @@ const Stocklists = ({ setAuth }) => {
   }, [listsChange]);
 
   return (
-    <main role="main">
+    <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
       <div className="jumbotron">
         <button
           className="btn btn-primary float-right"

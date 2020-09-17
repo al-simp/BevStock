@@ -10,6 +10,7 @@ import {
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "bootstrap/dist/css/bootstrap.min.css";
+import "./dashboard.css";
 
 //components
 import Dashboard from "./components/Dashboard";
@@ -25,10 +26,25 @@ import QrScan from "./components/stocktaking/QrScan";
 import QRGen from "./helpers/qrCodeGen";
 import ViewEdit from "./components/stocktaking/ViewEdit";
 import StockTakeLists from "./components/stocktaking/StocktakeLists";
-
+import Nav from "./components/Nav";
+import ProductsDb from "./components/inventory/ProductsDB";
+import { useRef } from "react";
+import Test from "./components/Test";
+import Test2 from "./components/test2";
+import ProcessDelivery from "./components/inventory/ProcessDelivery";
+import PdfTest from "./components/MyDocument";
+import PreviousStocktakeRecords from "./components/inventory/PreviousStocktakeRecords";
 toast.configure();
 
 const App = () => {
+  const [isAuthenticated, setIsAuthenticated] = useState(true);
+  const setAuth = (boolean) => {
+    setIsAuthenticated(boolean);
+  };
+  const name = localStorage.getItem("name");
+  const userType = localStorage.getItem("role");
+
+  //check if user is authorised
   async function isAuth() {
     try {
       const response = await fetch("http://localhost:5000/auth/is-verify", {
@@ -37,6 +53,7 @@ const App = () => {
       });
 
       const parseRes = await response.json();
+      console.log("isAuth", parseRes);
 
       parseRes === true ? setIsAuthenticated(true) : setIsAuthenticated(false);
     } catch (err) {
@@ -44,157 +61,188 @@ const App = () => {
     }
   }
 
-  const role = (userRole) => {
-    userRole === localStorage.getItem("role")
-      ? setIsAuthroised(true)
-      : setIsAuthroised(false);
-    return isAuthorised;
-  };
-
   useEffect(() => {
     isAuth();
   }, []);
 
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isAuthorised, setIsAuthroised] = useState(false);
-
-  const setAuth = (boolean) => {
-    setIsAuthenticated(boolean);
-  };
-
   return (
     <Fragment>
+      <Nav
+        setIsAuthenticated={setIsAuthenticated}
+        isAuthenticated={isAuthenticated}
+        name={name}
+        userType={userType}
+      />
       <Router>
-        <div>
-          <Switch>
-            <Route
-              exact
-              path="/"
-              render={(props) =>
-                !isAuthenticated ? (
-                  <Landing {...props} />
-                ) : (
-                  <Redirect to="/dashboard" />
-                )
-              }
-            />
-            <Route
-              exact
-              path="/login"
-              render={(props) =>
-                !isAuthenticated ? (
-                  <Login {...props} setAuth={setAuth} />
-                ) : (
-                  <Redirect to="/dashboard" />
-                )
-              }
-            />
-            <Route
-              exact
-              path="/dashboard"
-              render={(props) =>
-                isAuthenticated ? (
-                  role("Admin") ? (
-                    <Dashboard {...props} setAuth={setAuth} />
-                  ) : (
-                    <UserDashboard {...props} setAuth={setAuth} />
-                  )
-                ) : (
-                  <Redirect to="/login" />
-                )
-              }
-            />
-            <Route
-              exact
-              path="/stocktaking"
-              render={(props) =>
-                isAuthenticated ? (
-                  role("Admin") ? (
-                    <Stocktaking {...props} setAuth={setAuth} />
-                  ) : (
-                    <UserStocktake {...props} setAuth={setAuth} />
-                  )
-                ) : (
-                  <Redirect to="/login" />
-                )
-              }
-            />
-            <Route
-              exact
-              path="/team"
-              render={(props) =>
-                isAuthenticated ? (
-                  role("Admin") ? (
-                    <TeamManagement {...props} setAuth={setAuth} />
-                  ) : (
-                    <Dashboard {...props} setAuth={setAuth} />
-                  )
-                ) : (
-                  <Redirect to="/login" />
-                )
-              }
-            />
-            <Route
-              exact
-              path="/count/:id/:stocktakeid"
-              render={(props) =>
-                isAuthenticated ? (
-                  <Count {...props} setAuth={setAuth} />
-                ) : (
-                  <Redirect to="/dashboard" />
-                )
-              }
-            />
-            <Route
-              exact
-              path="/viewedit/:id"
-              render={(props) =>
-                isAuthenticated ? (
-                  <ViewEdit {...props} setAuth={setAuth} />
-                ) : (
-                  <Redirect to="/dashboard" />
-                )
-              }
-            />
-            <Route
-              exact
-              path="/inventory"
-              render={(props) =>
-                isAuthenticated ? (
-                  <Inventory {...props} setAuth={setAuth} />
-                ) : (
-                  <Redirect to="/dashboard" />
-                )
-              }
-            />
-             <Route
-              exact
-              path="/stocktakelists"
-              render={(props) =>
-                isAuthenticated ? (
-                  <StockTakeLists {...props} setAuth={setAuth} />
-                ) : (
-                  <Redirect to="/dashboard" />
-                )
-              }
-            />
-
-            <Route
-              exact
-              path="/qrscan"
-              render={() =>
-                  <QrScan/>
-              }
-            />
-            <Route
-              exact
-              path="/qrgen"
-              render={() =>
-                  <QRGen/>
-              }
-            />
-          </Switch>
-        </div>
+        <Switch>
+          <Route
+            exact
+            path="/"
+            render={(props) =>
+              !isAuthenticated ? (
+                <Landing {...props} />
+              ) : (
+                <Redirect to="/dashboard" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/login"
+            render={(props) =>
+              isAuthenticated ? (
+                <Redirect to="/dashboard" />
+              ) : (
+                <Login {...props} setAuth={setAuth} />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/dashboard"
+            render={(props) =>
+              isAuthenticated ? (
+                <Dashboard {...props} setAuth={setAuth} name={name} />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/stocktaking"
+            render={(props) =>
+              isAuthenticated ? (
+                <Stocktaking {...props} setAuth={setAuth} />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/team"
+            render={(props) =>
+              isAuthenticated ? (
+                <TeamManagement {...props} setAuth={setAuth} />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/count/:id/:stocktakeid"
+            render={(props) =>
+              isAuthenticated ? (
+                <Count {...props} setAuth={setAuth} />
+              ) : (
+                <Redirect to="/dashboard" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/viewedit/:id"
+            render={(props) =>
+              isAuthenticated ? (
+                <ViewEdit {...props} setAuth={setAuth} />
+              ) : (
+                <Redirect to="/dashboard" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/test"
+            render={(props) =>
+              isAuthenticated ? <Test /> : <Redirect to="/dashboard" />
+            }
+          />
+          <Route
+            exact
+            path="/inventory/:id"
+            render={(props) =>
+              isAuthenticated ? (
+                <Inventory {...props} setAuth={setAuth} />
+              ) : (
+                <Redirect to="/dashboard" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/stocktakelists"
+            render={(props) =>
+              isAuthenticated ? (
+                <StockTakeLists {...props} setAuth={setAuth} />
+              ) : (
+                <Redirect to="/dashboard" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/userdashboard"
+            render={(props) =>
+              isAuthenticated ? (
+                <UserDashboard {...props} setAuth={setAuth} />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/userstocktaking"
+            render={(props) =>
+              isAuthenticated ? (
+                <UserStocktake {...props} setAuth={setAuth} />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/products"
+            render={(props) =>
+              isAuthenticated ? (
+                <ProductsDb {...props} setAuth={setAuth} />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/stocktakerecord/:id"
+            render={(props) =>
+              isAuthenticated ? (
+                <PreviousStocktakeRecords {...props} setAuth={setAuth} />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          <Route
+            exact
+            path="/qrscan"
+            render={isAuthenticated ? () => <QrScan /> : () => <Login />}
+          />
+          <Route
+            exact
+            path="/processdelivery"
+            render={(props) =>
+              isAuthenticated ? (
+                <ProcessDelivery {...props} setAuth={setAuth} />
+              ) : (
+                <Redirect to="/login" />
+              )
+            }
+          />
+          <Route exact path="/test" render={PdfTest} />
+        </Switch>
       </Router>
     </Fragment>
   );

@@ -1,87 +1,176 @@
 import React, { Fragment, useState, useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
+import TopSellerChart from "../components/TopSellerChart";
+import ProductAlerts from "../components/inventory/ProductAlerts";
+import DashBoardStocktaking from "./DashboardStocktaking";
+import StockRecords from "./inventory/StockRecords";
+import _ from "lodash";
 
-import { toast } from "react-toastify";
+const Dashboard = ({ setAuth, name }) => {
+  const [stocktake, setStocktake] = useState(false);
+  const [predictedOrder, setPredictedOrder] = useState([]);
+  const [levels, setLevels] = useState([]);
+  const [graphLabels, setGraphLabels] = useState([]);
+  const [graphData, setGraphData] = useState([]);
+  const [allTimeLabels, setAllTimeLabels] = useState([]);
+  const [allTimeData, setAllTimeData] = useState([]);
 
-const Dashboard = ({ setAuth }) => {
-  const [name, setName] = useState("");
+  //get id of stocktake if stocktake in progress
+  const stockId = Number(localStorage.getItem("stocktake"));
 
-  async function getName() {
+  //if stock ID exists, set stocktake to true.
+  const Stocktake = () => {
+    if (stockId !== 0) {
+      setStocktake(true);
+    }
+  };
+
+  const getPredictedOrder = (levels) => {
+    setPredictedOrder(
+      levels.map((item) => {
+        return {
+          name: item.product_name,
+          predictedOrder: Number(
+            Number(item.sum) - item.avg_weekly_sales + item.par_level
+          ),
+        };
+      })
+    );
+  };
+
+  //find levels with pars for product alerts components.
+  const getLevels = async () => {
     try {
-      const response = await fetch("http://localhost:5000/dashboard/", {
-        method: "GET",
-        headers: { token: localStorage.token },
-      });
-
+      const response = await fetch(
+        `http://localhost:5000/inventory/levels/${localStorage.getItem(
+          "laststocktake"
+        )}`,
+        {
+          method: "GET",
+          headers: { token: localStorage.token },
+        }
+      );
       const parseRes = await response.json();
-
-      setName(parseRes.user_name);
+      setLevels(parseRes);
     } catch (err) {
       console.log(err.message);
     }
-  }
-
-  const logout = (e) => {
-    e.preventDefault();
-    localStorage.clear();
-    setAuth(false);
-    toast.success("Logged out succsessfully!");
   };
 
+  //get top selling products for chart (week)
+  const getTopSellers = async () => {
+    try {
+      const response = await fetch(
+        `http://localhost:5000/inventory/topsellers/${localStorage.getItem(
+          "laststocktake"
+        )}`,
+        {
+          method: "GET",
+          headers: { token: localStorage.token },
+        }
+      );
+      const parseRes = await response.json();
+      setGraphLabels(
+        parseRes.map((product) => {
+          return product.product_name;
+        })
+      );
+      setGraphData(
+        parseRes.map((product) => {
+          return product.sales;
+        })
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  //get top selling products for chart (all time)
+  const getTopSellersAllTime = async () => {
+    try {
+      const response = await fetch(
+        `http://192.168.0.15:5000/inventory/alltimetopsellers/`,
+        {
+          method: "GET",
+          headers: { token: localStorage.token },
+        }
+      );
+      const parseRes = await response.json();
+      setAllTimeLabels(
+        parseRes.map((product) => {
+          return product.product_name;
+        })
+      );
+      setAllTimeData(
+        parseRes.map((product) => {
+          return product.sum;
+        })
+      );
+    } catch (error) {
+      console.log(error.message);
+    }
+  };
+
+  const getPermission = async () => {
+    Notification.requestPermission().then(function (result) {
+      console.log(result);
+    });
+  };
+
+  //get userType for conditional render
+  const userType = localStorage.getItem("role");
+
   useEffect(() => {
-    getName();
+    getLevels();
+    getTopSellers();
+    Stocktake();
+    getTopSellersAllTime();
   }, []);
 
-  return (
+  return userType === "User" ? (
+    <Redirect to="/userdashboard" />
+  ) : (
     <Fragment>
-      <main role="main">
-        <div className="jumbotron">
-          <button
-            className="btn btn-primary float-right"
-            onClick={(e) => logout(e)}
-          >
-            Logout
-          </button>
-          <div className="container">
-            <h1 className="display-3">Hello, {name}!</h1>
-            <p>Welcome to your BevStock dashboard.</p>
-          </div>
-        </div>
+      <div className="container-fluid">
+        <div className="row">
+          <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+            <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+              <h1 className="h2">Welcome back, {name}!</h1>
+              <div className="btn-toolbar mb-2 mb-md-0"></div>
+            </div>
 
-        <div className="container">
-          <div className="row">
-            <div className="col-md-4">
-              <h2>Stocktaking</h2>
-              <p>
-                <Link className="btn btn-secondary" to="/stocktaking">
-                  View/Edit Stock Areas
-                </Link>
-              </p>
-              <p>
-                <Link className="btn btn-secondary" to="/stocktakelists">
-                  Perform a Stocktake
-                </Link>
-              </p>
+            <div className="row">
+              <div className="col-md-6">
+                {_.isEmpty(graphLabels) || _.isEmpty(graphData) ? (
+                  <div>Loading</div>
+                ) : (
+                  <TopSellerChart
+                    weekData={graphData}
+                    weekLabels={graphLabels}
+                    allTimeData={allTimeData}
+                    allTimeLabels={allTimeLabels}
+                  />
+                )}
+              </div>
+              <div className="col-md-6">
+                {_.isEmpty(levels) ? (
+                  <div>Loading...</div>
+                ) : (
+                  <ProductAlerts levels={levels} />
+                )}
+              </div>
             </div>
-            <div className="col-md-4">
-              <h2>Team Management</h2>
-              <p>
-                <Link className="btn btn-secondary" to="/team">
-                  Team Management
-                </Link>
-              </p>
+            <div className="row">
+              <div className="col-md-6">
+                <StockRecords />
+              </div>
+              <div className="col-md-6">
+                <DashBoardStocktaking stocktake={stocktake} />
+              </div>
             </div>
-            <div className="col-md-4">
-              <h2>Inventory</h2>
-              <p>
-                <Link className="btn btn-secondary" to="/inventory">
-                  View Inventory
-                </Link>
-              </p>
-            </div>
-          </div>
+          </main>
         </div>
-      </main>
+      </div>
     </Fragment>
   );
 };

@@ -1,10 +1,67 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
+import AssignList from "./AssignList";
 
-const ShowLists = ({ allLists, setListsChange, stocktake, stocktakeData }) => {
-  console.log(stocktake);
+const ShowLists = ({ allLists, setListsChange, stocktake, stocktake_id }) => {
+  const [assignedLists, setAssignedLists] = useState([]);
+  const [unassignedLists, setUnassignedLists] = useState([]);
   const [lists, setLists] = useState([]); //assigned to an empty array
   const [stocktakeInstance, setStocktakeInstance] = useState([]);
+
+  //get the lists that have been assigned to staff
+  const getAssignedLists = async () => {
+    try {
+      const body = { stocktake_id };
+      const assignedLists = await fetch(
+        "http://localhost:5000/stocklists/assignedlists",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }
+      );
+      const parseRes = await assignedLists.json();
+      console.log(parseRes);
+      setAssignedLists(parseRes);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  //get the unassigned lists
+  const getUnassignedLists = async () => {
+    try {
+      const body = { stocktake_id };
+      const unassignedLists = await fetch(
+        "http://localhost:5000/stocklists/unassignedlists",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }
+      );
+      const parseRes = await unassignedLists.json();
+      setUnassignedLists(parseRes);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  const unassign = async (id) => {
+    try {
+      const body = { id, stocktake_id };
+      const unassign = await fetch(
+        "http://localhost:5000/stocklists/unassignuser",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }
+      );
+      await unassign.json();
+      setListsChange(true);
+    } catch (error) {}
+  };
 
   //delete list function
   const deleteList = async (id) => {
@@ -22,16 +79,17 @@ const ShowLists = ({ allLists, setListsChange, stocktake, stocktakeData }) => {
     setListsChange(true);
   };
 
-
   useEffect(() => {
-    setStocktakeInstance(stocktakeData);
+    setStocktakeInstance(stocktake_id);
     setLists(allLists);
-  }, [allLists, stocktakeData]);
+    setListsChange(false);
+    if (stocktake) {
+      getAssignedLists();
+      getUnassignedLists();
+    }
+  }, [allLists]);
 
-  console.log(stocktakeData);
-  
-
-  return !stocktake  ?
+  return !stocktake ? (
     <table className="table text-center">
       <thead>
         <tr>
@@ -64,31 +122,76 @@ const ShowLists = ({ allLists, setListsChange, stocktake, stocktakeData }) => {
         ))}
       </tbody>
     </table>
-   : 
-    <table className="table text-center">
-      <thead>
-        <tr>
-          <th>Stock Area</th>
-          <th>Count</th>
-        </tr>
-      </thead>
-      <tbody>
-        {allLists.map((stocklist) => (
-          <tr key={stocklist.stocklist_id}>
-            <td>{stocklist.stocklist_name}</td>
-            <td>
-              <Link
-                to={`count/${stocklist.stocklist_id}/${stocktakeData}`}
-                className="btn btn-primary"
-              >
-                Count
-              </Link>
-            </td>
-          </tr>
-        ))}
-      </tbody>
-    </table>
-  
+  ) : (
+    <div className="container">
+      <div className="row">
+        <div className="col">
+          <h4>Unassigned Stock Areas</h4>
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th>Stock Area</th>
+                <th>Assign to team member</th>
+                <th>Count</th>
+              </tr>
+            </thead>
+            <tbody>
+              {unassignedLists.map((stocklist) => (
+                <tr key={stocklist.stocklist_id}>
+                  <td>{stocklist.stocklist_name}</td>
+                  <td>
+                    <AssignList
+                      name={stocklist.stocklist_name}
+                      stocklist_id={stocklist.stocklist_id}
+                      setListsChange={setListsChange}
+                    />
+                  </td>
+                  <td>
+                    <Link
+                      to={`count/${stocklist.stocklist_id}/${stocktakeInstance}`}
+                      className="btn btn-primary"
+                    >
+                      Count
+                    </Link>
+                  </td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+        <div className="col">
+          <h4>Assigned Stock Areas</h4>
+          <table className="table table-bordered">
+            <thead>
+              <tr>
+                <th>Stock Area</th>
+                <th>Assigned to</th>
+                <th>Status</th>
+              </tr>
+            </thead>
+            <tbody>
+              {assignedLists.map((list) => (
+                <tr key={list.stocklist_id}>
+                  <td>{list.stocklist_name}</td>
+                  <td>{list.user_name}</td>
+                  {list.completed ? (
+                    <td><span className="badge badge-pill badge-success">Completed</span></td>
+                  ) : (
+                    <td>
+                    <span className="badge badge-pill badge-warning">In Progress</span>
+                      <button href="#" className="badge badge-pill badge-danger" onClick={(e) => unassign(list.stocklist_id)}>
+                        Unassign
+                      </button>
+                    </td>
+                  )}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default ShowLists;

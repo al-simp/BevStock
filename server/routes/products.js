@@ -26,13 +26,24 @@ router.get("/:id", async(req,res) => {
     }
 })
 
-
-router.get("/distinct", async(req, res) => {
+router.get("/get/distinct", async(req, res) => {
     try {
-        const allProducts = await pool.query("SELECT DISTINCT FROM product");
+        const allProducts = await pool.query("SELECT DISTINCT product_id FROM product");
         res.json(allProducts.rows)
     } catch (err) {
         console.error(err.message);
+    }
+})
+
+
+//add a new product
+router.post("/new", async(req, res) => {
+    try {
+        const { name, size, par, category } = req.body;
+        const addProduct = await pool.query("INSERT INTO product (product_name, product_size, product_category, par_level) VALUES ($1, $2, $3, $4)", [name, size, category, par]);
+        res.json(addProduct);
+    } catch (error) {
+        console.error(error.message);
     }
 })
 

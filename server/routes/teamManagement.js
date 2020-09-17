@@ -10,12 +10,23 @@ const validInfo = require("../middleware/validInfo")
 //get all team members
 router.get("/", async(req, res) => {
     try {
-        const team = await pool.query("SELECT * FROM app_user");
+        const team = await pool.query("SELECT * FROM app_user WHERE active = 'true'");
         res.json(team.rows)
     } catch (err) {
         console.error(err.message)
     }
 });
+
+//get all team members who are not admin
+router.get("/users", async(req, res) => {
+    try {
+        const team = await pool.query("SELECT user_id, user_name FROM app_user WHERE role NOT IN ('Admin') AND active ='true'");
+        res.json(team.rows)
+    } catch (err) {
+        console.error(err.message)
+    }
+});
+
 
 //add a user
 router.post("/add", validInfo, async(req, res) => {
@@ -23,7 +34,7 @@ router.post("/add", validInfo, async(req, res) => {
 
         //1. destructure the req.body (name, email, password)
 
-        const { name, email, password } = req.body;
+        const { name, email, password, role } = req.body;
 
         //2. check if user exists (if user exists then throw error)
 
@@ -42,7 +53,7 @@ router.post("/add", validInfo, async(req, res) => {
 
         //4. enter the ner user ino the database
 
-        const newUser = await pool.query("INSERT INTO app_user (user_name, user_email, user_password) VALUES ($1, $2, $3) RETURNING *", [name, email, bcryptPassword]);
+        const newUser = await pool.query("INSERT INTO app_user (user_name, user_email, user_password, role) VALUES ($1, $2, $3, $4) RETURNING *", [name, email, bcryptPassword, role]);
 
 
         //5. generating our jwt token
@@ -80,11 +91,11 @@ router.put("/update/:id", authorisation, async(req, res) => {
 })
 
 //delete a team member
-router.delete("/delete/:id", authorisation, async(req, res) => {
+router.put("/delete/:id", async(req, res) => {
     try {
         const { id } = req.params;
         const deleteTeamMember = await pool.query(
-           "DELETE FROM app_user WHERE user_id = $1 RETURNING *",
+           "UPDATE app_user SET active = 'false' WHERE user_id = $1 RETURNING *",
            [id]
         )
 
@@ -93,8 +104,5 @@ router.delete("/delete/:id", authorisation, async(req, res) => {
         console.error(err.message);
     }
 })
-
-//update team member details 
-router.put("/update/:id")
 
 module.exports = router;

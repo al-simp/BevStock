@@ -9,7 +9,7 @@ const ShowTeam = ({ allTeamMembers, setTeamChange }) => {
   const deleteTeamMember = async (id) => {
     try {
       await fetch(`http://localhost:5000/teammanagement/delete/${id}`, {
-        method: "DELETE",
+        method: "PUT",
         headers: { token: localStorage.token },
       });
 
@@ -21,8 +21,7 @@ const ShowTeam = ({ allTeamMembers, setTeamChange }) => {
   };
 
   useEffect(() => {
-    setTeamMembers(allTeamMembers);
-  }, [allTeamMembers]);
+  }, []);
 
   return (
     <Fragment>
@@ -30,6 +29,7 @@ const ShowTeam = ({ allTeamMembers, setTeamChange }) => {
         <thead>
           <tr>
             <th>Name</th>
+            <th>Role</th>
             <th>Edit</th>
             <th>Delete</th>
           </tr>
@@ -39,6 +39,7 @@ const ShowTeam = ({ allTeamMembers, setTeamChange }) => {
           {allTeamMembers.map((app_user) => (
             <tr key={app_user.user_id}>
               <td>{app_user.user_name}</td>
+              <td>{app_user.role}</td>
               <td>
                 <EditTeamMember
                   member={app_user}

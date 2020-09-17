@@ -44,7 +44,7 @@ class QrCodeReader extends Component {
           onScan={this.handleScan}
           />
           
-        <Bottle result={result} hasResult={hasResult} hasScanned={hasScanned} setPairBool={setPairBool}/>
+        <Bottle result={result} hasResult={hasResult} hasScanned={hasScanned} setPairBool={setPairBool} setProductsChange={this.props.setProductsChange} setQuantity={this.props.setQuantity}/>
 
       </div>
     )

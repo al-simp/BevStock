@@ -1,47 +1,73 @@
 import React, { useEffect, useState } from "react";
 import _ from "lodash";
+import CountModal from "./CountModal";
 
 const Bottle = (props) => {
   const [bottle, setBottle] = useState({});
 
-  const { result, hasScanned, hasResult, setPairBool } = props;
-  
+  const {
+    result,
+    hasScanned,
+    hasResult,
+    setPairBool,
+    setProductsChange,
+    setQuantity,
+  } = props;
+  const stocktake = localStorage.getItem("stocktake");
 
   const getBottle = async () => {
-    
     if (result !== null && !hasResult && !hasScanned) {
-      console.log("result", result, "scanned", hasScanned, "hasResult", hasResult)
-        setPairBool("hasScanned", true);
+      console.log(
+        "result",
+        result,
+        "scanned",
+        hasScanned,
+        "hasResult",
+        hasResult
+      );
+      setPairBool("hasScanned", true);
       try {
+        const body = { result, stocktake };
         const response = await fetch(
-          `http://localhost:5000/products/${result}`,
+          "http://localhost:5000/stocktake/productfromid",
           {
-            method: "GET",
-            headers: { token: localStorage.token },
+            method: "POST",
+            headers: { "Content-type": "application/json" },
+            body: JSON.stringify(body),
           }
         );
 
         const parseData = await response.json();
-        
+
         console.log(parseData.length);
-        setBottle(parseData);
+        setBottle(parseData[0]);
         console.log(parseData);
         setPairBool("hasResult", true);
-        console.log(bottle);
       } catch (err) {
         console.error(err.message);
         setPairBool("hasScanned", false);
       }
-    } 
+    }
   };
 
   useEffect(() => {
-      if (!hasResult) {
-    getBottle();
-      }
+    if (!hasResult) {
+      getBottle();
+    }
   }, [result, bottle]);
 
-  return !_.isEmpty(bottle) ? <h1>{bottle[0].product_name}</h1> : <h1>No bottle found</h1>
+  return !_.isEmpty(bottle) ? (
+    <div>
+      <CountModal
+        product={bottle}
+        stocktakeid={stocktake}
+        setProductsChange={setProductsChange}
+        setQuantity={setQuantity}
+      />
+    </div>
+  ) : (
+    <h1>No bottle found</h1>
+  );
 };
 
 export default Bottle;

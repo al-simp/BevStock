@@ -6,8 +6,19 @@ import { toast } from "react-toastify";
 import UserShowLists from "./UserShowLists";
 
 const UserStocktake = ({ setAuth }) => {
+  const [stocktake, setStocktake] = useState(false);
   const [allLists, setLists] = useState([]);
   const [listsChange, setListsChange] = useState(false);
+
+  const stocktake_id = localStorage.getItem("stocktake");
+
+  const checkStocktake = () => {
+    console.log("hello")
+    if (stocktake_id !== null) {
+      console.log("stocktake in progress");
+      setStocktake(true);
+    }
+  };
 
   const getLists = async () => {
     try {
@@ -31,6 +42,7 @@ const UserStocktake = ({ setAuth }) => {
   };
 
   useEffect(() => {
+    checkStocktake();
     getLists();
     setListsChange(false);
   }, [listsChange]);
@@ -46,12 +58,10 @@ const UserStocktake = ({ setAuth }) => {
         </button>
         <div className="container">
           <h1 className="display-3">Stock Areas</h1>
-          <div>
-          </div>
         </div>
       </div>
       <div>
-        <UserShowLists allLists={allLists} />
+        <UserShowLists allLists={allLists} setListsChange={setListsChange} stocktake={stocktake} stocktake_id={stocktake_id}/>
       </div>
     </main>
   );

@@ -3,9 +3,9 @@ import Bottle from "../../images/beer-bottle.png";
 import { useEffect } from "react";
 
 //Modal that opens when counting a particular product. Preoduct is passed in as props
-const CountModal = ({ product, setProductsChange, stocktakeid }) => {
+const CountModal = ({ product, setProductsChange, stocktakeid, setQuantity, setQuantityChange }) => {
   const [partial, setPartial] = useState(0);
-  const [quantity, setQuantity] = useState(0);
+  const [tempQuantity, setTempQuantity] = useState(0);
   const stocktake = Number(stocktakeid);
 
   //Onchange for partial bottle form field
@@ -15,41 +15,45 @@ const CountModal = ({ product, setProductsChange, stocktakeid }) => {
 
   //Adds partial quantity to temporary quantity
   const addPartial = () => {
-    setQuantity(Number(quantity + partial));
+    setTempQuantity(Number(tempQuantity + partial));
     setPartial(0);
   };
 
   //Adds one full bottle to temporary quantity
   const addOne = () => {
-    setQuantity(Number(quantity + 1));
+    setTempQuantity(Number(tempQuantity + 1));
   };
 
   //Subtracts one ful bottle from temporary quantity
   const minusOne = () => {
-    setQuantity(Number(quantity - 1));
+    setTempQuantity(Number(tempQuantity - 1));
   };
 
   // Should set product.quantity to the temp quantity value and zero out temp quantity after
   const setProductQuantity = async (item) => {
     try {
-      const body = { item, stocktake, quantity };
+      const body = { item, stocktake, tempQuantity };
       console.log(body);
       const response = await fetch("http://localhost:5000/stocktake/count", {
-        method: "POST",
+        method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
 
       const parseRes = await response.json();
 
-      console.log(parseRes);
+      setQuantity(parseRes.rows[0].quantity);
+
     } catch (error) {
       console.error(error.message);
     }
+    setTempQuantity(0);
     setProductsChange(true);
+    setQuantityChange(true);
+    
   };
 
-  useEffect(() => {}, [quantity]);
+  useEffect(() => {}, [tempQuantity]);
 
   return (
     <Fragment>
@@ -107,7 +111,8 @@ const CountModal = ({ product, setProductsChange, stocktakeid }) => {
                     alt="Bottle Image"
                     height="140"
                     width="140"
-                  />
+    
+                />
                 </div>
                 <div className="col-sm">
                   <button className="btn btn-success" onClick={addOne}>
@@ -117,7 +122,7 @@ const CountModal = ({ product, setProductsChange, stocktakeid }) => {
               </div>
               <div className="row">
                 <div className="col-sm"></div>
-                <div className="col-sm">{quantity}</div>
+                <div className="col-sm">{tempQuantity}</div>
                 <div className="col-sm"></div>
               </div>
             </div>

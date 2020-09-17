@@ -5,7 +5,7 @@ const { authorisation } = require("../middleware/authorisation")
 router.get("/", authorisation, async(req, res) => {
     try {
 
-        const user = await pool.query("SELECT user_name FROM app_user WHERE user_id = $1", [req.user.id])
+        const user = await pool.query("SELECT user_name, user_id FROM app_user WHERE user_id = $1", [req.user.id])
 
         res.json(user.rows[0]);
 
@@ -13,6 +13,15 @@ router.get("/", authorisation, async(req, res) => {
     } catch (err) {
         console.error(err.message);
         res.status(500).json("Server Error");
+    }
+})
+
+router.get("/duties", authorisation, async(req, res) => {
+    try {
+        const duties = await pool.query("SELECT * FROM stocklist_stocktake_user WHERE user_id = $1 AND completed = 'false'", [req.user.id])
+        res.json(duties.rows);
+    } catch (error) {
+        console.error(error.message)
     }
 })
 

@@ -15,31 +15,35 @@ const AddTeamMember = ({ setTeamChange }) => {
   };
 
   const onSubmitForm = async (e) => {
-    const modal = document.getElementById('myModal');
+    const modal = document.getElementById("myModal");
     e.preventDefault();
-    modal.setAttribute('style', 'display: none');
-    const modalBackdrops = document.getElementsByClassName('modal-backdrop');
+    modal.setAttribute("style", "display: none");
+    const modalBackdrops = document.getElementsByClassName("modal-backdrop");
     document.body.removeChild(modalBackdrops[0]);
 
+    const userRole = document.getElementById("userrole");
+    const role = userRole.value;
+
     try {
-      const body = { email, password, name };
+      const body = { email, password, name, role };
 
       const response = await fetch("http://localhost:5000/teammanagement/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
-      
+
       await response.json();
 
       toast.success("Registered Successfully!");
 
-      setTeamChange(true);
       setInputs({
         email: "",
         password: "",
         name: "",
       });
+
+      setTeamChange(true);
     } catch (err) {
       console.error(err.message);
     }
@@ -92,11 +96,11 @@ const AddTeamMember = ({ setTeamChange }) => {
                   value={name}
                   onChange={(e) => onChange(e)}
                 />
-                <button
-                  className="btn btn-success btn-block"
-                >
-                  Submit
-                </button>
+                <select className="form-control my-3" id="userrole">
+                  <option value="User">Bar Staff</option>
+                  <option value="Admin">Manager</option>
+                </select>
+                <button className="btn btn-success btn-block">Submit</button>
               </form>
             </div>
           </div>
