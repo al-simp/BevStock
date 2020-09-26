@@ -4,6 +4,8 @@ const webpush = require("web-push");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
+const https = require("https");
+const fs = require("fs");
 
 //middleware
 app.use(cors());
@@ -53,6 +55,11 @@ app.post("/subscribe/:user", (req, res) => {
     .catch((err) => console.error(err));
 });
 
+const httpsOptions = {
+  cert: fs.readFileSync(path.join(__dirname, "ssl", "server.crt")),
+  key: fs.readFileSync(path.join(__dirname, "ssl", "server.key")),
+};
+
 //register and login routes
 app.use("/auth", require("./routes/jwtAuth"));
 
@@ -69,6 +76,6 @@ app.use("/inventory", require("./routes/inventory"));
 
 app.use("/stocktake", require("./routes/stocktake"));
 
-app.listen(5000, () => {
-  console.log("Server is starting on port 5000");
-});
+https.createServer(httpsOptions, app).listen(5000, function() {
+console.log("server running on port 5000")
+})

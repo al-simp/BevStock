@@ -8,7 +8,7 @@ const ShowTeam = ({ allTeamMembers, setTeamChange }) => {
 
   const deleteTeamMember = async (id) => {
     try {
-      await fetch(`http://localhost:5000/teammanagement/delete/${id}`, {
+      await fetch(`https://localhost:5000/teammanagement/delete/${id}`, {
         method: "PUT",
         headers: { token: localStorage.token },
       });

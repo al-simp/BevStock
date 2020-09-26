@@ -34,7 +34,7 @@ const CountModal = ({ product, setProductsChange, stocktakeid, setQuantity, setQ
     try {
       const body = { item, stocktake, tempQuantity };
       console.log(body);
-      const response = await fetch("http://localhost:5000/stocktake/count", {
+      const response = await fetch("https://localhost:5000/stocktake/count", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

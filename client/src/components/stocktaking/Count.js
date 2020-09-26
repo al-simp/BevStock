@@ -21,7 +21,7 @@ const Count = (props) => {
   const getName = async (id) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/stocklists/get/${id}`,
+        `https://localhost:5000/stocklists/get/${id}`,
         {
           method: "GET",
           headers: { token: localStorage.token },
@@ -41,7 +41,7 @@ const Count = (props) => {
     try {
       const body = { id, stocktake };
       const response = await fetch(
-        `http://localhost:5000/stocktake/liststocktake`,
+        `https://localhost:5000/stocktake/liststocktake`,
         {
           method: "POST",
           headers: { "Content-type": "application/json" },

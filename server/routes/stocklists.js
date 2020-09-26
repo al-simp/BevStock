@@ -7,7 +7,9 @@ const { authorisation } = require("../middleware/authorisation");
 //get all stocklists
 router.get("/", authorisation, async (req, res) => {
   try {
-    const allStocklists = await pool.query("SELECT * FROM stocklist WHERE stocklist_id != 59;");
+    const allStocklists = await pool.query(
+      "SELECT * FROM stocklist WHERE stocklist_id != 59;"
+    );
     res.json(allStocklists.rows);
   } catch (err) {
     console.error(err.message);
@@ -182,7 +184,7 @@ router.post("/assignedlists", async (req, res) => {
   try {
     const { stocktake_id } = req.body;
     const getAssigned = await pool.query(
-      "SELECT a.user_name, s.stocklist_name, s.stocklist_id, ss.completed FROM stocklist s RIGHT JOIN stocklist_stocktake_user ss ON s.stocklist_id = ss.stocklist_id JOIN app_user a ON ss.user_id = a.user_id WHERE ss.stocktake_id = $1",
+      "SELECT a.user_name, s.stocklist_name, s.stocklist_id, ss.completed, ss.user_message FROM stocklist s RIGHT JOIN stocklist_stocktake_user ss ON s.stocklist_id = ss.stocklist_id JOIN app_user a ON ss.user_id = a.user_id WHERE ss.stocktake_id = $1",
       [stocktake_id]
     );
     res.json(getAssigned.rows);
@@ -208,10 +210,10 @@ router.post("/unassignedlists", async (req, res) => {
 //assign a stocklist to a user
 router.post("/assignlist", async (req, res) => {
   try {
-    const { stocklist_id, stocktake_id, id } = req.body;
+    const { stocklist_id, stocktake_id, id, userMessage } = req.body;
     const assignlist = await pool.query(
-      "INSERT INTO stocklist_stocktake_user (stocklist_id, stocktake_id, user_id) VALUES ($1, $2, $3)",
-      [stocklist_id, stocktake_id, id]
+      "INSERT INTO stocklist_stocktake_user (stocklist_id, stocktake_id, user_id, user_message) VALUES ($1, $2, $3, $4)",
+      [stocklist_id, stocktake_id, id, userMessage]
     );
     res.json(assignlist);
   } catch (error) {
@@ -238,7 +240,7 @@ router.post("/userassignedlists", async (req, res) => {
   try {
     const { id, stocktake_id } = req.body;
     const assignedlists = await pool.query(
-      "SELECT s.stocklist_id, s.stocklist_name, ss.completed FROM stocklist s JOIN stocklist_stocktake_user ss ON s.stocklist_id = ss.stocklist_id WHERE user_id = $1 AND stocktake_id = $2",
+      "SELECT s.stocklist_id, s.stocklist_name, ss.completed, ss.user_message, ss.completed_message FROM stocklist s JOIN stocklist_stocktake_user ss ON s.stocklist_id = ss.stocklist_id WHERE user_id = $1 AND stocktake_id = $2",
       [id, stocktake_id]
     );
     res.json(assignedlists.rows);
@@ -269,8 +271,8 @@ router.post("/savepositions", async (req, res) => {
     );
     res.json(savepositions);
   } catch (error) {
-    console.error(error.message)
+    console.error(error.message);
   }
-})
+});
 
 module.exports = router;

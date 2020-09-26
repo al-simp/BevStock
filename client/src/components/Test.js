@@ -38,7 +38,7 @@ const Test = () => {
     // Send push notification
 
     console.log("sending push");
-    await fetch("http://localhost:5000/subscribe", {
+    await fetch("https://localhost:5000/subscribe", {
       method: "POST",
       body: JSON.stringify(subscription),
       headers: {

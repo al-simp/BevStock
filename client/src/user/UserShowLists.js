@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import { Link } from "react-router-dom";
 
 const UserShowLists = ({
@@ -18,7 +18,7 @@ const UserShowLists = ({
       const body = { id, stocktake_id };
       console.log(body);
       const response = await fetch(
-        "http://localhost:5000/stocklists/userassignedlists",
+        "https://localhost:5000/stocklists/userassignedlists",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -37,12 +37,11 @@ const UserShowLists = ({
   }
 
   async function markComplete(id) {
+    const message = document.getElementById(`${id}`).value;
     try {
-      console.log(id);
-      console.log(stocktakeInstance);
-      const body = { id, stocktakeInstance };
+      const body = { id, stocktakeInstance, message };
       const response = await fetch(
-        "http://localhost:5000/stocktake/markascomplete",
+        "https://localhost:5000/stocktake/markascomplete",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -51,7 +50,9 @@ const UserShowLists = ({
       );
       await response.json();
       setListsChange(true);
-    } catch (error) {}
+    } catch (err) {
+      console.error(err.message);
+    }
   }
 
   useEffect(() => {
@@ -70,10 +71,13 @@ const UserShowLists = ({
               <tr>
                 <th>Stock Area</th>
                 <th>Count</th>
+                <th>Manager Message</th>
+                <th>Your Message</th>
                 <th>Status</th>
               </tr>
             </thead>
             <tbody>
+            {console.log(assignedLists)}
               {assignedLists.map((list) => (
                 <tr key={list.stocklist_id}>
                   <td>{list.stocklist_name}</td>
@@ -85,17 +89,32 @@ const UserShowLists = ({
                       Count
                     </Link>
                   </td>
+                  <td>{list.user_message}</td>
                   {list.completed ? (
-                    <td>Complete</td>
+                    <Fragment>
+                      <td>{list.completed_message}</td>
+                      <td>Complete</td>
+                    </Fragment>
                   ) : (
-                    <td>
-                      <button
-                        className="btn btn-success"
-                        onClick={(e) => markComplete(list.stocklist_id)}
-                      >
-                        Mark as complete
-                      </button>
-                    </td>
+                    <Fragment>
+                      <td>
+                        <textarea
+                          id={`${list.stocklist_id}`}
+                          cols="40"
+                          rows="2"
+                        ></textarea>
+                      </td>
+                      <td>
+                        <button
+                          className="btn btn-success"
+                          onClick={(e) => {
+                            markComplete(list.stocklist_id);
+                          }}
+                        >
+                          Mark as complete
+                        </button>
+                      </td>
+                    </Fragment>
                   )}
                 </tr>
               ))}

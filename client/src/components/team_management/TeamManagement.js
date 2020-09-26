@@ -11,7 +11,7 @@ const TeamManagement = () => {
     // get the team members from the db to populate allTeamMembers array
     const getTeam = async () => {
         try {
-            const response = await fetch("http://localhost:5000/teammanagement/", {
+            const response = await fetch("https://localhost:5000/teammanagement/", {
                 method: "GET",
                 headers: { token: localStorage.token },
             });

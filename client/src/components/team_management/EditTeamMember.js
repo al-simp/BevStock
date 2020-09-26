@@ -24,7 +24,7 @@ const EditTeamMember = ({ member, setTeamChange }) => {
       myHeaders.append("Content-Type", "application/json");
       myHeaders.append("token", localStorage.token);
 
-      await fetch(`http://localhost:5000/teammanagement/update/${id}`, {
+      await fetch(`https://localhost:5000/teammanagement/update/${id}`, {
         method: "PUT",
         headers: myHeaders,
         body: JSON.stringify(body),

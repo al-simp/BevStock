@@ -21,7 +21,7 @@ router.get("/activestocktake", async (req, res) => {
 router.post("/new", async (req, res) => {
   try {
     const addStocktake = await pool.query(
-      "INSERT INTO stocktake (stocktake_date) VALUES (TIMESTAMP '2020-09-14 10:00:00') RETURNING *",
+      "INSERT INTO stocktake (stocktake_date) VALUES (TIMESTAMP '2020-09-14 10:00:00') RETURNING *"
     );
     res.json(addStocktake);
   } catch (err) {
@@ -128,10 +128,10 @@ router.post("/productfromid/", async (req, res) => {
 
 router.post("/markascomplete", async (req, res) => {
   try {
-    const { id, stocktakeInstance } = req.body;
+    const { id, stocktakeInstance, message } = req.body;
     const marksascomplete = await pool.query(
-      "UPDATE stocklist_stocktake_user SET completed = true WHERE stocklist_id = $1 AND stocktake_id = $2",
-      [id, stocktakeInstance]
+      "UPDATE stocklist_stocktake_user SET completed = true, completed_message = $3 WHERE stocklist_id = $1 AND stocktake_id = $2",
+      [id, stocktakeInstance, message]
     );
     res.json(marksascomplete);
   } catch {

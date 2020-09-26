@@ -26,7 +26,7 @@ const StocktakeLists = ({ setAuth }) => {
 
   const getProducts = async (id) => {
     try {
-      const productsResponse = await fetch("http://localhost:5000/stocktake/", {
+      const productsResponse = await fetch("https://localhost:5000/stocktake/", {
         method: "GET",
         headers: { token: localStorage.token },
       });
@@ -43,7 +43,7 @@ const StocktakeLists = ({ setAuth }) => {
       const stockId = localStorage.getItem("stocktake");
       const body = { id, stockId };
 
-      fetch("http://localhost:5000/stocktake/generate", {
+      fetch("https://localhost:5000/stocktake/generate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
@@ -59,7 +59,7 @@ const StocktakeLists = ({ setAuth }) => {
     if (!stocktake && stocktake_id === null) {
       try {
         //insert new record into stocktake table
-        const response = await fetch("http://localhost:5000/stocktake/new", {
+        const response = await fetch("https://localhost:5000/stocktake/new", {
           method: "POST",
           headers: { token: localStorage.token },
         });
@@ -81,7 +81,7 @@ const StocktakeLists = ({ setAuth }) => {
 
   const getLists = async () => {
     try {
-      const response = await fetch("http://localhost:5000/stocklists/", {
+      const response = await fetch("https://localhost:5000/stocklists/", {
         method: "GET",
         headers: { token: localStorage.token },
       });
@@ -96,7 +96,7 @@ const StocktakeLists = ({ setAuth }) => {
   const checkAllCounted = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/stocklists/inprogress",
+        "https://localhost:5000/stocklists/inprogress",
         {
           method: "GET",
           headers: { token: localStorage.token },
@@ -120,7 +120,7 @@ const StocktakeLists = ({ setAuth }) => {
     const getDistinctProducts = async () => {
       try {
         const response = await fetch(
-          "http://localhost:5000/products/get/distinct",
+          "https://localhost:5000/products/get/distinct",
           {
             method: "GET",
             headers: { token: localStorage.token },
@@ -149,7 +149,7 @@ const StocktakeLists = ({ setAuth }) => {
   const writeSales = (product_id, sales, stocktake) => {
     try {
       const body = { product_id, sales, stocktake };
-      fetch("http://localhost:5000/inventory/writesales", {
+      fetch("https://localhost:5000/inventory/writesales", {
         method: "POST",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify(body),
@@ -163,7 +163,7 @@ const StocktakeLists = ({ setAuth }) => {
   const getSalesData = async (product, prevStocktake, currentStocktake) => {
     try {
       const body = { prevStocktake, currentStocktake, product };
-      const response = await fetch(`http://localhost:5000/inventory/sales`, {
+      const response = await fetch(`https://localhost:5000/inventory/sales`, {
         method: "POST",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify(body),
@@ -195,7 +195,7 @@ const StocktakeLists = ({ setAuth }) => {
   const setStocktakeInactive = async () => {
     try {
       const body = { stocktake_id };
-      const response = await fetch("http://localhost:5000/stocktake/inactive", {
+      const response = await fetch("https://localhost:5000/stocktake/inactive", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

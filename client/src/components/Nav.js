@@ -7,13 +7,16 @@ import { MdLocalBar } from "react-icons/md";
 import { RiScales2Fill } from "react-icons/ri";
 import { BsCardChecklist } from "react-icons/bs";
 
+//nav bar component for the admin site. 
+
 const Nav = ({ setIsAuthenticated, isAuthenticated, name, userType }) => {
   const [stocktake, setStocktake] = useState(false);
   const [latestInventoryId, setLatestInventoryId] = useState("");
 
+  // check is authenticated, otherwise nav will show when user is logged out. 
   async function isAuth() {
     try {
-      const response = await fetch("http://localhost:5000/auth/is-verify", {
+      const response = await fetch("https://localhost:5000/auth/is-verify", {
         method: "GET",
         headers: { token: localStorage.token },
       });
@@ -26,16 +29,18 @@ const Nav = ({ setIsAuthenticated, isAuthenticated, name, userType }) => {
     }
   }
 
+  //logout method
   const logout = (e) => {
     e.preventDefault();
     localStorage.clear();
     setIsAuthenticated(false);
-    toast.success("Logged out succsessfully!");
+    toast.success("Logged out successfully!");
   };
+
 
   async function findLastStocktake() {
     try {
-      const response = await fetch("http://localhost:5000/inventory/latest", {
+      const response = await fetch("https://localhost:5000/inventory/latest", {
         method: "GET",
         headers: { token: localStorage.token },
       });
@@ -49,7 +54,7 @@ const Nav = ({ setIsAuthenticated, isAuthenticated, name, userType }) => {
   async function checkStocktake() {
     try {
       const response = await fetch(
-        "http://localhost:5000/stocktake/activestocktake",
+        "https://localhost:5000/stocktake/activestocktake",
         {
           method: "GET",
           headers: { token: localStorage.token },
@@ -103,8 +108,7 @@ const Nav = ({ setIsAuthenticated, isAuthenticated, name, userType }) => {
             </li>
             <li className="nav-item">
               <a className="nav-link" href="/stocktakelists">
-                <RiScales2Fill />
-                {stocktake ? "  Continue Stocktake" : "  Perform a Stocktake"}
+                <RiScales2Fill />  Stocktaking
               </a>
             </li>
             <li className="nav-item">

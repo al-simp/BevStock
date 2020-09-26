@@ -13,7 +13,7 @@ const ShowLists = ({ allLists, setListsChange, stocktake, stocktake_id }) => {
     try {
       const body = { stocktake_id };
       const assignedLists = await fetch(
-        "http://localhost:5000/stocklists/assignedlists",
+        "https://localhost:5000/stocklists/assignedlists",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -33,7 +33,7 @@ const ShowLists = ({ allLists, setListsChange, stocktake, stocktake_id }) => {
     try {
       const body = { stocktake_id };
       const unassignedLists = await fetch(
-        "http://localhost:5000/stocklists/unassignedlists",
+        "https://localhost:5000/stocklists/unassignedlists",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -51,7 +51,7 @@ const ShowLists = ({ allLists, setListsChange, stocktake, stocktake_id }) => {
     try {
       const body = { id, stocktake_id };
       const unassign = await fetch(
-        "http://localhost:5000/stocklists/unassignuser",
+        "https://localhost:5000/stocklists/unassignuser",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -66,7 +66,7 @@ const ShowLists = ({ allLists, setListsChange, stocktake, stocktake_id }) => {
   //delete list function
   const deleteList = async (id) => {
     try {
-      await fetch(`http://localhost:5000/stocklists/delete/${id}`, {
+      await fetch(`https://localhost:5000/stocklists/delete/${id}`, {
         method: "DELETE",
         headers: { token: localStorage.token },
       });
@@ -167,6 +167,7 @@ const ShowLists = ({ allLists, setListsChange, stocktake, stocktake_id }) => {
                 <th>Stock Area</th>
                 <th>Assigned to</th>
                 <th>Status</th>
+                <th>Message</th>
               </tr>
             </thead>
             <tbody>
@@ -183,7 +184,9 @@ const ShowLists = ({ allLists, setListsChange, stocktake, stocktake_id }) => {
                         Unassign
                       </button>
                     </td>
-                  )}
+                  )
+                  }
+                  <td>{list.user_message}</td>
                 </tr>
               ))}
             </tbody>

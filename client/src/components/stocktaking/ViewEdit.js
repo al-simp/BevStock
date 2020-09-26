@@ -33,7 +33,7 @@ const ViewEdit = (props) => {
   const handleDragEnter = (e, params) => {
     //check that index of current item is not the same as target location.
     if (dragItem.current !== params.productI) {
-      // use setProducts hook to set state to newly arranged array. 
+      // use setProducts hook to set state to newly arranged array.
       setProducts((oldProducts) => {
         let newList = JSON.parse(JSON.stringify(oldProducts));
         newList.splice(
@@ -42,12 +42,12 @@ const ViewEdit = (props) => {
           newList.splice(dragItem.current.productI, 1)[0]
         );
         dragItem.current = params;
-        return newList; 
+        return newList;
       });
     }
   };
 
-  //the handle drag end listener. 
+  //the handle drag end listener.
   const handleDragEnd = () => {
     setDragging(false);
     dragNode.current.removeEventListener("dragend", handleDragEnd);
@@ -60,7 +60,7 @@ const ViewEdit = (props) => {
     try {
       const body = { id, productI };
       const response = await fetch(
-        `http://localhost:5000/stocklists/savepositions`,
+        `https://localhost:5000/stocklists/savepositions`,
         {
           method: "POST",
           headers: { "Content-type": "application/json" },
@@ -78,7 +78,7 @@ const ViewEdit = (props) => {
     if (dragMode) {
       products.map((product, productI) => {
         setPosition(product.product_stocklist_id, productI);
-        return null
+        return null;
       });
       setDragMode(false);
       toast.success("Positions updated");
@@ -99,7 +99,7 @@ const ViewEdit = (props) => {
   const getName = async (id) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/stocklists/get/${id}`,
+        `https://localhost:5000/stocklists/get/${id}`,
         {
           method: "GET",
           headers: { token: localStorage.token },
@@ -118,7 +118,7 @@ const ViewEdit = (props) => {
   const getProducts = async (id) => {
     try {
       const response = await fetch(
-        `http://localhost:5000/stocklists/list/${id}`,
+        `https://localhost:5000/stocklists/list/${id}`,
         {
           method: "GET",
           headers: { token: localStorage.token },
@@ -136,7 +136,7 @@ const ViewEdit = (props) => {
   //delete a product from list
   const deleteProduct = async (id) => {
     try {
-      await fetch(`http://localhost:5000/stocklists/deleteproduct/${id}`, {
+      await fetch(`https://localhost:5000/stocklists/deleteproduct/${id}`, {
         method: "DELETE",
         headers: { token: localStorage.token },
       });
@@ -158,15 +158,18 @@ const ViewEdit = (props) => {
       <div className="container-fluid">
         <div className="row">
           <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <div className="container">
-              <h1 className="display-3">{name}</h1>
-              <div>
-                <Dropdown listId={id} setProductsChange={setProductsChange} />
-              </div>
-              <div className="saveButton">
-                <button className="btn btn-primary" onClick={setPositions}>
+            <div className="jumbotron">
+              <div className="container">
+                <h1 className="display-3">{name}</h1>
+                <button
+                  className="btn btn-primary float-right"
+                  onClick={setPositions}
+                >
                   {dragMode ? "Save Positions" : "Change List Order"}
                 </button>
+                <div>
+                  <Dropdown listId={id} setProductsChange={setProductsChange} />
+                </div>
               </div>
             </div>
             <table className="table mt-5 text-center">

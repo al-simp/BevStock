@@ -7,7 +7,7 @@ const AssignList = ({ name, stocklist_id, setListsChange }) => {
   const getTeamMembers = async () => {
     try {
       const response = await fetch(
-        "http://localhost:5000/teammanagement/users",
+        "https://localhost:5000/teammanagement/users",
         {
           method: "GET",
         }
@@ -20,11 +20,22 @@ const AssignList = ({ name, stocklist_id, setListsChange }) => {
     }
   };
 
-  async function assignToUser(id) {
+  async function assignToUser(event, user) {
+    event.preventDefault();
+    const userMessage = document.getElementById(user.user_id).value;
+    console.log(user, userMessage);
+    const id = user.user_id;
+
+    const modal = document.getElementById(`id${stocklist_id}`);
+
+    modal.setAttribute("style", "display: none");
+    const modalBackdrops = document.getElementsByClassName("modal-backdrop");
+    document.body.removeChild(modalBackdrops[0]);
+
     try {
-      const body = { stocklist_id, stocktake_id, id };
+      const body = { stocklist_id, stocktake_id, id, userMessage };
       const response = await fetch(
-        "http://localhost:5000/stocklists/assignlist",
+        "https://localhost:5000/stocklists/assignlist",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -61,20 +72,38 @@ const AssignList = ({ name, stocklist_id, setListsChange }) => {
             <div className="modal-body"></div>
             <table className="table">
               <thead>
-                <tr></tr>
+                <tr>
+                  <th>Name</th>
+                  <th>Message</th>
+                </tr>
               </thead>
               <tbody>
                 {users.map((user) => (
                   <tr key={user.user_id}>
                     <td>{user.user_name}</td>
                     <td>
-                      <button
-                        className="btn btn-success"
-                        data-dismiss="modal"
-                        onClick={() => assignToUser(user.user_id)}
+                      <form
+                        onSubmit={(e) => {
+                          assignToUser(e, user);
+                        }}
                       >
-                        Assign
-                      </button>
+                        <div className="row">
+                          <div className="col-7">
+                            <textarea
+                              className="form-control"
+                              id={`${user.user_id}`}
+                            />
+                          </div>
+                          <div className="col">
+                            <button
+                              className="btn btn-success float-right"
+                              type="submit"
+                            >
+                              Assign
+                            </button>
+                          </div>
+                        </div>
+                      </form>
                     </td>
                   </tr>
                 ))}

@@ -27,7 +27,7 @@ const AddTeamMember = ({ setTeamChange }) => {
     try {
       const body = { email, password, name, role };
 
-      const response = await fetch("http://localhost:5000/teammanagement/add", {
+      const response = await fetch("https://localhost:5000/teammanagement/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

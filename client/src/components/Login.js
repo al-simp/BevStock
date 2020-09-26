@@ -21,7 +21,7 @@ const Login = ({ setAuth }) => {
     try {
       const body = { email, password };
 
-      const response = await fetch(`http://localhost:5000/auth/login`, {
+      const response = await fetch(`https://localhost:5000/auth/login`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
@@ -59,7 +59,7 @@ const Login = ({ setAuth }) => {
 
   async function getDuties() {
     try {
-      const response = await fetch("http://localhost:5000/dashboard/duties", {
+      const response = await fetch("https://localhost:5000/dashboard/duties", {
         method: "GET",
         headers: { token: localStorage.token },
       });
@@ -78,7 +78,7 @@ const Login = ({ setAuth }) => {
   async function checkStocktake() {
     try {
       const response = await fetch(
-        "http://localhost:5000/stocktake/activestocktake",
+        "https://localhost:5000/stocktake/activestocktake",
         {
           method: "GET",
           headers: { token: localStorage.token },
@@ -101,7 +101,7 @@ const Login = ({ setAuth }) => {
   //method to find last stocktake for inventory records
   async function findLastStocktake() {
     try {
-      const response = await fetch("http://localhost:5000/inventory/latest", {
+      const response = await fetch("https://localhost:5000/inventory/latest", {
         method: "GET",
         headers: { token: localStorage.token },
       });
@@ -144,7 +144,7 @@ const Login = ({ setAuth }) => {
     // Send push notification
 
     console.log("sending push");
-    await fetch(`http://localhost:5000/subscribe/${localStorage.getItem("role")}`, {
+    await fetch(`https://localhost:5000/subscribe/${localStorage.getItem("role")}`, {
       method: "POST",
       body: JSON.stringify(subscription),
       headers: {

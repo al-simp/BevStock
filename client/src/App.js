@@ -23,17 +23,13 @@ import Inventory from "./components/inventory/Inventory";
 import UserDashboard from "./user/UserDashboard";
 import UserStocktake from "./user/UserStocktake";
 import QrScan from "./components/stocktaking/QrScan";
-import QRGen from "./helpers/qrCodeGen";
 import ViewEdit from "./components/stocktaking/ViewEdit";
 import StockTakeLists from "./components/stocktaking/StocktakeLists";
 import Nav from "./components/Nav";
 import ProductsDb from "./components/inventory/ProductsDB";
-import { useRef } from "react";
-import Test from "./components/Test";
-import Test2 from "./components/test2";
 import ProcessDelivery from "./components/inventory/ProcessDelivery";
-import PdfTest from "./components/MyDocument";
 import PreviousStocktakeRecords from "./components/inventory/PreviousStocktakeRecords";
+
 toast.configure();
 
 const App = () => {
@@ -47,7 +43,7 @@ const App = () => {
   //check if user is authorised
   async function isAuth() {
     try {
-      const response = await fetch("http://localhost:5000/auth/is-verify", {
+      const response = await fetch("https://localhost:5000/auth/is-verify", {
         method: "GET",
         headers: { token: localStorage.token },
       });
@@ -154,13 +150,6 @@ const App = () => {
           />
           <Route
             exact
-            path="/test"
-            render={(props) =>
-              isAuthenticated ? <Test /> : <Redirect to="/dashboard" />
-            }
-          />
-          <Route
-            exact
             path="/inventory/:id"
             render={(props) =>
               isAuthenticated ? (
@@ -241,7 +230,6 @@ const App = () => {
               )
             }
           />
-          <Route exact path="/test" render={PdfTest} />
         </Switch>
       </Router>
     </Fragment>
