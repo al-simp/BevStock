@@ -42,7 +42,7 @@ const Dashboard = ({ setAuth, name }) => {
   const getLevels = async () => {
     try {
       const response = await fetch(
-        `https://localhost:5000/inventory/levels/${localStorage.getItem(
+        `/inventory/levels/${localStorage.getItem(
           "laststocktake"
         )}`,
         {
@@ -61,7 +61,7 @@ const Dashboard = ({ setAuth, name }) => {
   const getTopSellers = async () => {
     try {
       const response = await fetch(
-        `https://localhost:5000/inventory/topsellers/${localStorage.getItem(
+        `/inventory/topsellers/${localStorage.getItem(
           "laststocktake"
         )}`,
         {
@@ -89,7 +89,7 @@ const Dashboard = ({ setAuth, name }) => {
   const getTopSellersAllTime = async () => {
     try {
       const response = await fetch(
-        `https://localhost:5000/inventory/alltimetopsellers/`,
+        `/inventory/alltimetopsellers/`,
         {
           method: "GET",
           headers: { token: localStorage.token },

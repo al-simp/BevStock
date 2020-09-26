@@ -60,7 +60,7 @@ const ViewEdit = (props) => {
     try {
       const body = { id, productI };
       const response = await fetch(
-        `https://localhost:5000/stocklists/savepositions`,
+        `/stocklists/savepositions`,
         {
           method: "POST",
           headers: { "Content-type": "application/json" },
@@ -99,7 +99,7 @@ const ViewEdit = (props) => {
   const getName = async (id) => {
     try {
       const response = await fetch(
-        `https://localhost:5000/stocklists/get/${id}`,
+        `/stocklists/get/${id}`,
         {
           method: "GET",
           headers: { token: localStorage.token },
@@ -118,7 +118,7 @@ const ViewEdit = (props) => {
   const getProducts = async (id) => {
     try {
       const response = await fetch(
-        `https://localhost:5000/stocklists/list/${id}`,
+        `/stocklists/list/${id}`,
         {
           method: "GET",
           headers: { token: localStorage.token },
@@ -136,7 +136,7 @@ const ViewEdit = (props) => {
   //delete a product from list
   const deleteProduct = async (id) => {
     try {
-      await fetch(`https://localhost:5000/stocklists/deleteproduct/${id}`, {
+      await fetch(`/stocklists/deleteproduct/${id}`, {
         method: "DELETE",
         headers: { token: localStorage.token },
       });

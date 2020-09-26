@@ -6,10 +6,18 @@
         "@testing-library/jest-dom": "^4.2.4",
         "@testing-library/react": "^9.3.2",
         "@testing-library/user-event": "^7.1.2",
+        "bootstrap": "^3.4.1",
+        "chart.js": "^2.9.3",
         "history": "^4.10.1",
+        "jspdf-autotable": "^3.5.13",
+        "moment": "^2.29.0",
         "react": "^16.13.1",
+        "react-chartjs-2": "^2.10.0",
         "react-dom": "^16.13.1",
+        "react-icons": "^3.11.0",
+        "react-moment": "^0.9.7",
         "react-multi-select-component": "^2.0.9",
+        "react-qr-scanner": "0.0.10",
         "react-router": "^5.2.0",
         "react-router-dom": "^5.2.0",
         "react-scripts": "3.4.1",
@@ -36,5 +44,6 @@
             "last 1 firefox version",
             "last 1 safari version"
         ]
-    }
+    },
+    "proxy": "http://localhost:5000"
 }

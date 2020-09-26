@@ -15,7 +15,7 @@ const Test2 = () => {
   async function getProducts() {
     try {
       const response = await fetch(
-        "https://localhost:5000/products/get/distinct",
+        "/products/get/distinct",
         {
           method: "GET",
           headers: { token: localStorage.token },
@@ -31,7 +31,7 @@ const Test2 = () => {
   const writeSales = (product_id, sales, stocktake) => {
   try {
       const body = { product_id, sales, stocktake };
-      fetch("https://localhost:5000/inventory/writesales", {
+      fetch("/inventory/writesales", {
         method: "POST",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify(body),
@@ -54,7 +54,7 @@ const Test2 = () => {
   const getSalesData = async (product) => {
     try {
       const body = { prevStocktake, currentStocktake, product };
-      const response = await fetch(`https://localhost:5000/inventory/sales`, {
+      const response = await fetch(`/inventory/sales`, {
         method: "POST",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify(body),

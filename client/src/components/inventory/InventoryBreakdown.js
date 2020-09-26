@@ -9,7 +9,7 @@ const InventoryBreakdown = ({ product_id, id, name }) => {
     try {
       const body = { id, product };
       const response = await fetch(
-        "https://localhost:5000/inventory/breakdown",
+        "/inventory/breakdown",
         {
           method: "POST",
           headers: { "Content-type": "application/json" },

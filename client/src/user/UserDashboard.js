@@ -10,7 +10,7 @@ const UserDashboard = ({ setAuth }) => {
   async function checkStocktake() {
     try {
       const response = await fetch(
-        "https://localhost:5000/stocktake/activestocktake",
+        "/stocktake/activestocktake",
         {
           method: "GET",
           headers: { token: localStorage.token },
@@ -33,7 +33,7 @@ const UserDashboard = ({ setAuth }) => {
 
   async function getDuties() {
     try {
-      const response = await fetch("https://localhost:5000/dashboard/duties", {
+      const response = await fetch("/dashboard/duties", {
         method: "GET",
         headers: { token: localStorage.token },
       });
@@ -51,7 +51,7 @@ const UserDashboard = ({ setAuth }) => {
 
   async function getName() {
     try {
-      const response = await fetch("https://localhost:5000/dashboard/", {
+      const response = await fetch("/dashboard/", {
         method: "GET",
         headers: { token: localStorage.token },
       });

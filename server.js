@@ -4,13 +4,22 @@ const webpush = require("web-push");
 const bodyParser = require("body-parser");
 const cors = require("cors");
 const path = require("path");
-const https = require("https");
 const fs = require("fs");
+const PORT = process.env.PORT || 5000;
+
+//process.env.PORT
+//process.env.NODE_ENV => production or undefined
 
 //middleware
 app.use(cors());
 app.use(express.json()); // => this will allow access to the req.body from client side
 
+//app.use(express.static(path.join(__dirname, "client/build")));
+
+if (process.env.NODE_ENV === "production") {
+  //serve static content
+  app.use(express.static(path.join(__dirname, "client/build")));
+}
 //Routes
 
 //push notification route
@@ -55,11 +64,6 @@ app.post("/subscribe/:user", (req, res) => {
     .catch((err) => console.error(err));
 });
 
-const httpsOptions = {
-  cert: fs.readFileSync(path.join(__dirname, "ssl", "server.crt")),
-  key: fs.readFileSync(path.join(__dirname, "ssl", "server.key")),
-};
-
 //register and login routes
 app.use("/auth", require("./routes/jwtAuth"));
 
@@ -76,6 +80,10 @@ app.use("/inventory", require("./routes/inventory"));
 
 app.use("/stocktake", require("./routes/stocktake"));
 
-https.createServer(httpsOptions, app).listen(5000, function() {
-console.log("server running on port 5000")
-})
+app.get("*", (req, res) => {
+  res.sendFile(path.join(__dirname, "client/build/index.html"));
+});
+
+app.listen(PORT, function () {
+  console.log(`Server running on port ${PORT}`);
+});

@@ -13,7 +13,7 @@ const ShowLists = ({ allLists, setListsChange, stocktake, stocktake_id }) => {
     try {
       const body = { stocktake_id };
       const assignedLists = await fetch(
-        "https://localhost:5000/stocklists/assignedlists",
+        "/stocklists/assignedlists",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -33,7 +33,7 @@ const ShowLists = ({ allLists, setListsChange, stocktake, stocktake_id }) => {
     try {
       const body = { stocktake_id };
       const unassignedLists = await fetch(
-        "https://localhost:5000/stocklists/unassignedlists",
+        "/stocklists/unassignedlists",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -51,7 +51,7 @@ const ShowLists = ({ allLists, setListsChange, stocktake, stocktake_id }) => {
     try {
       const body = { id, stocktake_id };
       const unassign = await fetch(
-        "https://localhost:5000/stocklists/unassignuser",
+        "/stocklists/unassignuser",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -66,7 +66,7 @@ const ShowLists = ({ allLists, setListsChange, stocktake, stocktake_id }) => {
   //delete list function
   const deleteList = async (id) => {
     try {
-      await fetch(`https://localhost:5000/stocklists/delete/${id}`, {
+      await fetch(`/stocklists/delete/${id}`, {
         method: "DELETE",
         headers: { token: localStorage.token },
       });

@@ -16,7 +16,7 @@ const Nav = ({ setIsAuthenticated, isAuthenticated, name, userType }) => {
   // check is authenticated, otherwise nav will show when user is logged out. 
   async function isAuth() {
     try {
-      const response = await fetch("https://localhost:5000/auth/is-verify", {
+      const response = await fetch("/auth/is-verify", {
         method: "GET",
         headers: { token: localStorage.token },
       });
@@ -40,7 +40,7 @@ const Nav = ({ setIsAuthenticated, isAuthenticated, name, userType }) => {
 
   async function findLastStocktake() {
     try {
-      const response = await fetch("https://localhost:5000/inventory/latest", {
+      const response = await fetch("/inventory/latest", {
         method: "GET",
         headers: { token: localStorage.token },
       });
@@ -54,7 +54,7 @@ const Nav = ({ setIsAuthenticated, isAuthenticated, name, userType }) => {
   async function checkStocktake() {
     try {
       const response = await fetch(
-        "https://localhost:5000/stocktake/activestocktake",
+        "/stocktake/activestocktake",
         {
           method: "GET",
           headers: { token: localStorage.token },

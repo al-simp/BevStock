@@ -9,7 +9,6 @@ import {
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import "bootstrap/dist/css/bootstrap.min.css";
 import "./dashboard.css";
 
 //components
@@ -43,7 +42,7 @@ const App = () => {
   //check if user is authorised
   async function isAuth() {
     try {
-      const response = await fetch("https://localhost:5000/auth/is-verify", {
+      const response = await fetch("/auth/is-verify", {
         method: "GET",
         headers: { token: localStorage.token },
       });

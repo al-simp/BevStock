@@ -29,7 +29,7 @@ const Bottle = (props) => {
       try {
         const body = { result, stocktake };
         const response = await fetch(
-          "https://localhost:5000/stocktake/productfromid",
+          "/stocktake/productfromid",
           {
             method: "POST",
             headers: { "Content-type": "application/json" },

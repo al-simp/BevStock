@@ -18,7 +18,7 @@ const UserShowLists = ({
       const body = { id, stocktake_id };
       console.log(body);
       const response = await fetch(
-        "https://localhost:5000/stocklists/userassignedlists",
+        "/stocklists/userassignedlists",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -41,7 +41,7 @@ const UserShowLists = ({
     try {
       const body = { id, stocktakeInstance, message };
       const response = await fetch(
-        "https://localhost:5000/stocktake/markascomplete",
+        "/stocktake/markascomplete",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

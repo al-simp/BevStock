@@ -13,7 +13,7 @@ const Inventory = (props) => {
 
   const getInventory = async () => {
     const response = await fetch(
-      `https://localhost:5000/inventory/records/${id}`,
+      `/inventory/records/${id}`,
       {
         method: "GET",
         headers: { token: localStorage.token },

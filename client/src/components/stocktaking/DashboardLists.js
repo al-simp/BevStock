@@ -4,7 +4,7 @@ const DashboardLists = ({ stocktake }) => {
   const [allLists, setAllLists] = useState([]);
   const getLists = async () => {
     try {
-      const response = await fetch("https://localhost:5000/stocklists/", {
+      const response = await fetch("/stocklists/", {
         method: "GET",
         headers: { token: localStorage.token },
       });

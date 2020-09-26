@@ -23,7 +23,7 @@ const ProcessDelivery = () => {
     try {
         const body = { item, stocktake, tempQuantity };
         console.log(body);
-        const response = await fetch("https://localhost:5000/stocktake/count", {
+        const response = await fetch("/stocktake/count", {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(body),
@@ -43,7 +43,7 @@ const ProcessDelivery = () => {
   const getProducts = async () => {
     try {
       const response = await fetch(
-        `https://localhost:5000/stocktake/processdelivery/${localStorage.getItem(
+        `/stocktake/processdelivery/${localStorage.getItem(
           "laststocktake"
         )}`,
         {
