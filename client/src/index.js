@@ -1,8 +1,7 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import './index.css';
 import App from './App';
-import 'bootstrap/dist/css/bootstrap.css'
+import "./index.css";
 window.React1 = require('react');
 
 ReactDOM.render(

@@ -31,7 +31,7 @@ const TeamManagement = () => {
     }, [teamChange]);
 
     return (
-      <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">F
+      <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
           <div className="jumbotron">
             <div className="container">
               <h1 className="display-3">Team Management</h1>

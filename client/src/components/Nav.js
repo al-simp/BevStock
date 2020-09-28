@@ -1,4 +1,4 @@
-import React from "react";
+import React, { Fragment } from "react";
 import { toast } from "react-toastify";
 import { useState } from "react";
 import { useEffect } from "react";
@@ -6,14 +6,15 @@ import { AiOutlineHome } from "react-icons/ai";
 import { MdLocalBar } from "react-icons/md";
 import { RiScales2Fill } from "react-icons/ri";
 import { BsCardChecklist } from "react-icons/bs";
+import "../css/dashboard.css"
 
-//nav bar component for the admin site. 
+//nav bar component for the admin site.
 
 const Nav = ({ setIsAuthenticated, isAuthenticated, name, userType }) => {
   const [stocktake, setStocktake] = useState(false);
   const [latestInventoryId, setLatestInventoryId] = useState("");
 
-  // check is authenticated, otherwise nav will show when user is logged out. 
+  // check is authenticated, otherwise nav will show when user is logged out.
   async function isAuth() {
     try {
       const response = await fetch("/auth/is-verify", {
@@ -37,7 +38,6 @@ const Nav = ({ setIsAuthenticated, isAuthenticated, name, userType }) => {
     toast.success("Logged out successfully!");
   };
 
-
   async function findLastStocktake() {
     try {
       const response = await fetch("/inventory/latest", {
@@ -53,13 +53,10 @@ const Nav = ({ setIsAuthenticated, isAuthenticated, name, userType }) => {
 
   async function checkStocktake() {
     try {
-      const response = await fetch(
-        "/stocktake/activestocktake",
-        {
-          method: "GET",
-          headers: { token: localStorage.token },
-        }
-      );
+      const response = await fetch("/stocktake/activestocktake", {
+        method: "GET",
+        headers: { token: localStorage.token },
+      });
 
       const parseRes = await response.json();
 
@@ -78,8 +75,8 @@ const Nav = ({ setIsAuthenticated, isAuthenticated, name, userType }) => {
     findLastStocktake();
     isAuth();
   }, [isAuthenticated]);
-  return isAuthenticated && userType === 'Admin' ? (
-    <div>
+  return isAuthenticated && userType === "Admin" ? (
+    <Fragment>
       <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
         <a href="#" className="navbar-brand col-sm-3 col-md-2 mr-0">
           BevStock
@@ -108,7 +105,7 @@ const Nav = ({ setIsAuthenticated, isAuthenticated, name, userType }) => {
             </li>
             <li className="nav-item">
               <a className="nav-link" href="/stocktakelists">
-                <RiScales2Fill />  Stocktaking
+                <RiScales2Fill /> Stocktaking
               </a>
             </li>
             <li className="nav-item">
@@ -134,7 +131,7 @@ const Nav = ({ setIsAuthenticated, isAuthenticated, name, userType }) => {
           </ul>
         </div>
       </nav>
-    </div>
+    </Fragment>
   ) : null;
 };
 

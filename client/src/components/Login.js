@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
 import _ from "lodash";
 import { toast } from "react-toastify";
-import 'bootstrap/dist/css/bootstrap.css'
+import "bootstrap/dist/css/bootstrap.css";
 import "../css/signin.css";
 import Logo from "./images/Logo.png";
 const Login = ({ setAuth }) => {
@@ -202,22 +202,18 @@ const Login = ({ setAuth }) => {
         <link rel="icon" href="../../../../favicon.ico" />
 
         <form className="form-signin" onSubmit={onSubmitform}>
-          <img
-            class="mb-4"
-            src={Logo}
-            alt=""
-            width="100"
-            height="100"
-          ></img>
+          <img class="mb-4" src={Logo} alt="" width="100" height="100"></img>
           <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
           <label for="inputEmail" className="sr-only">
             Email address
           </label>
           <input
             type="email"
-            id="inputEmail"
+            name="email"
             className="form-control"
             placeholder="Email address"
+            value={email}
+            onChange={(e) => onChange(e)}
             required
             autofocus
           />
@@ -226,13 +222,13 @@ const Login = ({ setAuth }) => {
           </label>
           <input
             type="password"
-            id="inputPassword"
+            name="password"
             className="form-control"
             placeholder="Password"
+            onChange={(e) => onChange(e)}
             required
           />
-          <div className="checkbox mb-3">
-          </div>
+          <div className="checkbox mb-3"></div>
           <button className="btn btn-lg btn-primary btn-block" type="submit">
             Sign in
           </button>
