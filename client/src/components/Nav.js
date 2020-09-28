@@ -6,7 +6,6 @@ import { AiOutlineHome } from "react-icons/ai";
 import { MdLocalBar } from "react-icons/md";
 import { RiScales2Fill } from "react-icons/ri";
 import { BsCardChecklist } from "react-icons/bs";
-import "../css/dashboard.css"
 
 //nav bar component for the admin site.
 
