@@ -1,9 +1,8 @@
 import React, { Fragment, useState } from "react";
 import _ from "lodash";
 import { toast } from "react-toastify";
-import "bootstrap/dist/css/bootstrap.css";
-import "../css/signin.css";
 import Logo from "./images/Logo.png";
+import "../signin.css";
 const Login = ({ setAuth }) => {
   //key for pust notifications API
   const publicVapidKey =
@@ -203,7 +202,7 @@ const Login = ({ setAuth }) => {
 
         <form className="form-signin" onSubmit={onSubmitform}>
           <img class="mb-4" src={Logo} alt="" width="100" height="100"></img>
-          <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
+          <h1 className="h3 mb-3 font-weight-normal"></h1>
           <label for="inputEmail" className="sr-only">
             Email address
           </label>

@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from "react";
 import { toast } from "react-toastify";
-import "../../css/bootstrap.css";
-import "../../css/dashboard.css";
 
 //components
 import AddList from "./AddList";

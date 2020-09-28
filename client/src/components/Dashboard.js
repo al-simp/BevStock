@@ -5,8 +5,7 @@ import ProductAlerts from "../components/inventory/ProductAlerts";
 import DashBoardStocktaking from "./DashboardStocktaking";
 import StockRecords from "./inventory/StockRecords";
 import _ from "lodash";
-import "../css/dashboard.css";
-import "../index.css";
+import "../dashboard.css";
 
 const Dashboard = ({ setAuth, name }) => {
   const [stocktake, setStocktake] = useState(false);
@@ -44,9 +43,7 @@ const Dashboard = ({ setAuth, name }) => {
   const getLevels = async () => {
     try {
       const response = await fetch(
-        `/inventory/levels/${localStorage.getItem(
-          "laststocktake"
-        )}`,
+        `/inventory/levels/${localStorage.getItem("laststocktake")}`,
         {
           method: "GET",
           headers: { token: localStorage.token },
@@ -63,9 +60,7 @@ const Dashboard = ({ setAuth, name }) => {
   const getTopSellers = async () => {
     try {
       const response = await fetch(
-        `/inventory/topsellers/${localStorage.getItem(
-          "laststocktake"
-        )}`,
+        `/inventory/topsellers/${localStorage.getItem("laststocktake")}`,
         {
           method: "GET",
           headers: { token: localStorage.token },
@@ -90,13 +85,10 @@ const Dashboard = ({ setAuth, name }) => {
   //get top selling products for chart (all time)
   const getTopSellersAllTime = async () => {
     try {
-      const response = await fetch(
-        `/inventory/alltimetopsellers/`,
-        {
-          method: "GET",
-          headers: { token: localStorage.token },
-        }
-      );
+      const response = await fetch(`/inventory/alltimetopsellers/`, {
+        method: "GET",
+        headers: { token: localStorage.token },
+      });
       const parseRes = await response.json();
       setAllTimeLabels(
         parseRes.map((product) => {
@@ -133,44 +125,42 @@ const Dashboard = ({ setAuth, name }) => {
     <Redirect to="/userdashboard" />
   ) : (
     <Fragment>
-        <div className="row">
-          <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-            <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
-              <h1 className="h2">Welcome back, {name}!</h1>
-              <div className="btn-toolbar mb-2 mb-md-0"></div>
-            </div>
-
-            <div className="row">
-              <div className="col-md-6">
-                {_.isEmpty(graphLabels) || _.isEmpty(graphData) ? (
-                  <div>Loading</div>
-                ) : (
-                  <TopSellerChart
-                    weekData={graphData}
-                    weekLabels={graphLabels}
-                    allTimeData={allTimeData}
-                    allTimeLabels={allTimeLabels}
-                  />
-                )}
-              </div>
-              <div className="col-md-6">
-                {_.isEmpty(levels) ? (
-                  <div>Loading...</div>
-                ) : (
-                  <ProductAlerts levels={levels} />
-                )}
-              </div>
-            </div>
-            <div className="row">
-              <div className="col-md-6">
-                <StockRecords />
-              </div>
-              <div className="col-md-6">
-                <DashBoardStocktaking stocktake={stocktake} />
-              </div>
-            </div>
-          </main>
+      <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+        <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
+          <h1 className="h2">Welcome back, {name}!</h1>
+          <div className="btn-toolbar mb-2 mb-md-0"></div>
         </div>
+
+        <div className="row">
+          <div className="col-md-6">
+            {_.isEmpty(graphLabels) || _.isEmpty(graphData) ? (
+              <div>Loading</div>
+            ) : (
+              <TopSellerChart
+                weekData={graphData}
+                weekLabels={graphLabels}
+                allTimeData={allTimeData}
+                allTimeLabels={allTimeLabels}
+              />
+            )}
+          </div>
+          <div className="col-md-6">
+            {_.isEmpty(levels) ? (
+              <div>Loading...</div>
+            ) : (
+              <ProductAlerts levels={levels} />
+            )}
+          </div>
+        </div>
+        <div className="row">
+          <div className="col-md-6">
+            <StockRecords />
+          </div>
+          <div className="col-md-6">
+            <DashBoardStocktaking stocktake={stocktake} />
+          </div>
+        </div>
+      </main>
     </Fragment>
   );
 };

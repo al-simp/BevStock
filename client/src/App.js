@@ -9,6 +9,7 @@ import {
 
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import "./dashboard.css";
 
 //components
 import Dashboard from "./components/Dashboard";
