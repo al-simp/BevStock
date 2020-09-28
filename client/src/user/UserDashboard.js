@@ -51,7 +51,7 @@ const UserDashboard = ({ setAuth }) => {
 
   async function getName() {
     try {
-      const response = await fetch("/dashboard/", {
+      const response = await fetch("/routes/dashboard/", {
         method: "GET",
         headers: { token: localStorage.token },
       });

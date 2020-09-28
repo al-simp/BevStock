@@ -68,7 +68,6 @@ app.post("/subscribe/:user", (req, res) => {
 app.use("/auth", require("./routes/jwtAuth"));
 
 //dashboard route
-app.use("/dashboard", require("./routes/dashboard"));
 
 app.use("/stocklists", require("./routes/stocklists"));
 
