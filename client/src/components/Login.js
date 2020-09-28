@@ -1,7 +1,9 @@
 import React, { Fragment, useState } from "react";
 import _ from "lodash";
 import { toast } from "react-toastify";
-
+import 'bootstrap/dist/css/bootstrap.css'
+import "../css/signin.css";
+import Logo from "./images/Logo.png";
 const Login = ({ setAuth }) => {
   //key for pust notifications API
   const publicVapidKey =
@@ -77,13 +79,10 @@ const Login = ({ setAuth }) => {
   //method to check if there are any active stocktakes within the database.
   async function checkStocktake() {
     try {
-      const response = await fetch(
-        "/stocktake/activestocktake",
-        {
-          method: "GET",
-          headers: { token: localStorage.token },
-        }
-      );
+      const response = await fetch("/stocktake/activestocktake", {
+        method: "GET",
+        headers: { token: localStorage.token },
+      });
 
       const parseRes = await response.json();
 
@@ -171,8 +170,7 @@ const Login = ({ setAuth }) => {
 
   return (
     <Fragment>
-      <div className="m-5">
-        <h1 className="text-center my-5">Login</h1>
+      {/*} 
         <form onSubmit={onSubmitform}>
           <input
             type="email"
@@ -191,7 +189,56 @@ const Login = ({ setAuth }) => {
           />
           <button className="btn btn-success btn-block">Submit</button>
         </form>
-      </div>
+      </div> */}
+
+      <body className="text-center">
+        <meta charset="utf-8" />
+        <meta
+          name="viewport"
+          content="width=device-width, initial-scale=1, shrink-to-fit=no"
+        />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <link rel="icon" href="../../../../favicon.ico" />
+
+        <form className="form-signin" onSubmit={onSubmitform}>
+          <img
+            class="mb-4"
+            src={Logo}
+            alt=""
+            width="100"
+            height="100"
+          ></img>
+          <h1 className="h3 mb-3 font-weight-normal">Please sign in</h1>
+          <label for="inputEmail" className="sr-only">
+            Email address
+          </label>
+          <input
+            type="email"
+            id="inputEmail"
+            className="form-control"
+            placeholder="Email address"
+            required
+            autofocus
+          />
+          <label for="inputPassword" className="sr-only">
+            Password
+          </label>
+          <input
+            type="password"
+            id="inputPassword"
+            className="form-control"
+            placeholder="Password"
+            required
+          />
+          <div className="checkbox mb-3">
+          </div>
+          <button className="btn btn-lg btn-primary btn-block" type="submit">
+            Sign in
+          </button>
+          <p className="mt-5 mb-3 text-muted">Alan Simpson : QUB 2020</p>
+        </form>
+      </body>
     </Fragment>
   );
 };
