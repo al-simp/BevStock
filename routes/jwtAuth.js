@@ -46,6 +46,7 @@ router.post("/login", validInfo, async (req, res) => {
     //3. check if incoming password == database password
 
     {
+      /* {
       const validPassword = await bcrypt.compare(
         password,
         user.rows[0].user_password
@@ -54,6 +55,7 @@ router.post("/login", validInfo, async (req, res) => {
       if (!validPassword) {
         return res.status(401).json("Password or email is incorrect");
       }
+    }*/
     }
 
     //4. give jwt token
