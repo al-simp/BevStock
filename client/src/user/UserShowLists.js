@@ -18,7 +18,7 @@ const UserShowLists = ({
       const body = { id, stocktake_id };
       console.log(body);
       const response = await fetch(
-        "/stocklists/userassignedlists",
+        "/routes/stocklists/userassignedlists",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

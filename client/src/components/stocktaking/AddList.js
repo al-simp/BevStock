@@ -12,7 +12,7 @@ const AddList = ({ setListsChange }) => {
         myHeaders.append("token", localStorage.token);
   
         const body = { stocklist_name };
-        const response = await fetch("/stocklists/add", {
+        const response = await fetch("/routes/stocklists/add", {
           method: "POST",
           headers: myHeaders,
           body: JSON.stringify(body)

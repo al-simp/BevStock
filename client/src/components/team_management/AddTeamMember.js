@@ -27,7 +27,7 @@ const AddTeamMember = ({ setTeamChange }) => {
     try {
       const body = { email, password, name, role };
 
-      const response = await fetch("/teammanagement/add", {
+      const response = await fetch("/routes/teammanagement/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

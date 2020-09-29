@@ -6,7 +6,7 @@ const StockRecords = () => {
   const getStoctakes = async () => {
     try {
       const response = await fetch(
-        "/inventory/stocktakes",
+        "/routes/inventory/stocktakes",
         {
           method: "GET",
           headers: { token: localStorage.token },

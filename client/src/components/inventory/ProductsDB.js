@@ -13,7 +13,7 @@ const ProductsDb = () => {
   //get the products and populate products array.
   const getProducts = async () => {
     try {
-      const response = await fetch("/products/", {
+      const response = await fetch("/routes/products/", {
         method: "GET",
         headers: { token: localStorage.token },
       });

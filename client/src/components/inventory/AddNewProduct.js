@@ -35,7 +35,7 @@ const AddNewProduct = ({ setProductsChange }) => {
       const body = { name, size, par, category };
 
     //make a post request through the /products/ server route
-      const response = await fetch("/products/new", {
+      const response = await fetch("/routes/products/new", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),

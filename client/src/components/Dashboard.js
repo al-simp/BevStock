@@ -43,7 +43,7 @@ const Dashboard = ({ setAuth, name }) => {
   const getLevels = async () => {
     try {
       const response = await fetch(
-        `/inventory/levels/${localStorage.getItem("laststocktake")}`,
+        `/routes/inventory/levels/${localStorage.getItem("laststocktake")}`,
         {
           method: "GET",
           headers: { token: localStorage.token },
@@ -60,7 +60,7 @@ const Dashboard = ({ setAuth, name }) => {
   const getTopSellers = async () => {
     try {
       const response = await fetch(
-        `/inventory/topsellers/${localStorage.getItem("laststocktake")}`,
+        `/routes/inventory/topsellers/${localStorage.getItem("laststocktake")}`,
         {
           method: "GET",
           headers: { token: localStorage.token },
@@ -85,7 +85,7 @@ const Dashboard = ({ setAuth, name }) => {
   //get top selling products for chart (all time)
   const getTopSellersAllTime = async () => {
     try {
-      const response = await fetch(`/inventory/alltimetopsellers/`, {
+      const response = await fetch(`/routes/inventory/alltimetopsellers/`, {
         method: "GET",
         headers: { token: localStorage.token },
       });
@@ -157,7 +157,8 @@ const Dashboard = ({ setAuth, name }) => {
             <StockRecords />
           </div>
           <div className="col-md-6">
-            <DashBoardStocktaking stocktake={stocktake} />
+        {console.log(stockId)}
+            <DashBoardStocktaking stocktake={stocktake} stocktake_id={stockId}/>
           </div>
         </div>
       </main>

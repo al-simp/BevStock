@@ -16,7 +16,7 @@ const Dropdown = ({ listId, setQuantityChange }) => {
 
   const getProducts = async () => {
     try {
-      const response = await fetch("/products");
+      const response = await fetch("/routes/products");
       const jsonData = await response.json();
 
       setProducts(jsonData);
@@ -41,7 +41,7 @@ const Dropdown = ({ listId, setQuantityChange }) => {
     try {
       const body = { productId, listId, stockId };
       const response = await fetch(
-        "/stocklists/addproductstocktake",
+        "/routes/stocklists/addproductstocktake",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -61,7 +61,7 @@ const Dropdown = ({ listId, setQuantityChange }) => {
     try {
       const body = { productId, listId };
       const response = await fetch(
-        "/stocklists/addproduct",
+        "/routes/stocklists/addproduct",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

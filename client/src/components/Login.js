@@ -99,7 +99,7 @@ const Login = ({ setAuth }) => {
   //method to find last stocktake for inventory records
   async function findLastStocktake() {
     try {
-      const response = await fetch("/inventory/latest", {
+      const response = await fetch("/routes/inventory/latest", {
         method: "GET",
         headers: { token: localStorage.token },
       });

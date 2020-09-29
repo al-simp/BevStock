@@ -21,7 +21,7 @@ const Count = (props) => {
   const getName = async (id) => {
     try {
       const response = await fetch(
-        `/stocklists/get/${id}`,
+        `/routes/stocklists/get/${id}`,
         {
           method: "GET",
           headers: { token: localStorage.token },

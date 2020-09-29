@@ -7,7 +7,7 @@ const AssignList = ({ name, stocklist_id, setListsChange }) => {
   const getTeamMembers = async () => {
     try {
       const response = await fetch(
-        "/teammanagement/users",
+        "/routes/teammanagement/users",
         {
           method: "GET",
         }
@@ -35,7 +35,7 @@ const AssignList = ({ name, stocklist_id, setListsChange }) => {
     try {
       const body = { stocklist_id, stocktake_id, id, userMessage };
       const response = await fetch(
-        "/stocklists/assignlist",
+        "/routes/stocklists/assignlist",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

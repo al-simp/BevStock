@@ -69,13 +69,13 @@ app.use("/auth", require("./routes/jwtAuth"));
 
 //dashboard route
 
-app.use("/stocklists", require("./routes/stocklists"));
+app.use("/routes/stocklists", require("./routes/stocklists"));
 
-app.use("/teammanagement", require("./routes/teamManagement"));
+app.use("/routes/teammanagement", require("./routes/teamManagement"));
 
-app.use("/products", require("./routes/products"));
+app.use("/routes/products", require("./routes/products"));
 
-app.use("/inventory", require("./routes/inventory"));
+app.use("/routes/inventory", require("./routes/inventory"));
 
 app.use("/stocktake", require("./routes/stocktake"));
 

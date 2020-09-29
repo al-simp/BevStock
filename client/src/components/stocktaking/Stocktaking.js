@@ -11,7 +11,7 @@ const Stocklists = ({ setAuth }) => {
 
   const getLists = async () => {
     try {
-      const response = await fetch("/stocklists/", {
+      const response = await fetch("/routes/stocklists/", {
         method: "GET",
         headers: { token: localStorage.token },
       });

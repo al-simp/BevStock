@@ -6,7 +6,7 @@ import { AiOutlineHome } from "react-icons/ai";
 import { MdLocalBar } from "react-icons/md";
 import { RiScales2Fill } from "react-icons/ri";
 import { BsCardChecklist } from "react-icons/bs";
-
+import LogoNav from "./images/LogoNav.png";
 //nav bar component for the admin site.
 
 const Nav = ({ setIsAuthenticated, isAuthenticated, name, userType }) => {
@@ -39,7 +39,7 @@ const Nav = ({ setIsAuthenticated, isAuthenticated, name, userType }) => {
 
   async function findLastStocktake() {
     try {
-      const response = await fetch("/inventory/latest", {
+      const response = await fetch("/routes/inventory/latest", {
         method: "GET",
         headers: { token: localStorage.token },
       });
@@ -78,7 +78,7 @@ const Nav = ({ setIsAuthenticated, isAuthenticated, name, userType }) => {
     <Fragment>
       <nav className="navbar navbar-dark sticky-top bg-dark flex-md-nowrap p-0">
         <a href="#" className="navbar-brand col-sm-3 col-md-2 mr-0">
-          BevStock
+          <img src={LogoNav} alt="BevStock" width="87" height="25"/>
         </a>
         <ul className="navbar-nav px-3">
           <li className="nav-item text-nowrap">

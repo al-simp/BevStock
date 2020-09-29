@@ -9,7 +9,7 @@ const InventoryBreakdown = ({ product_id, id, name }) => {
     try {
       const body = { id, product };
       const response = await fetch(
-        "/inventory/breakdown",
+        "/routes/inventory/breakdown",
         {
           method: "POST",
           headers: { "Content-type": "application/json" },

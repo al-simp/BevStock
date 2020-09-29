@@ -13,7 +13,7 @@ const ShowLists = ({ allLists, setListsChange, stocktake, stocktake_id }) => {
     try {
       const body = { stocktake_id };
       const assignedLists = await fetch(
-        "/stocklists/assignedlists",
+        "/routes/stocklists/assignedlists",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -33,7 +33,7 @@ const ShowLists = ({ allLists, setListsChange, stocktake, stocktake_id }) => {
     try {
       const body = { stocktake_id };
       const unassignedLists = await fetch(
-        "/stocklists/unassignedlists",
+        "/routes/stocklists/unassignedlists",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -51,7 +51,7 @@ const ShowLists = ({ allLists, setListsChange, stocktake, stocktake_id }) => {
     try {
       const body = { id, stocktake_id };
       const unassign = await fetch(
-        "/stocklists/unassignuser",
+        "/routes/stocklists/unassignuser",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

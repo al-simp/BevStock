@@ -81,7 +81,7 @@ const StocktakeLists = ({ setAuth }) => {
 
   const getLists = async () => {
     try {
-      const response = await fetch("/stocklists/", {
+      const response = await fetch("/routes/stocklists/", {
         method: "GET",
         headers: { token: localStorage.token },
       });
@@ -96,7 +96,7 @@ const StocktakeLists = ({ setAuth }) => {
   const checkAllCounted = async () => {
     try {
       const response = await fetch(
-        "/stocklists/inprogress",
+        "/routes/stocklists/inprogress",
         {
           method: "GET",
           headers: { token: localStorage.token },
@@ -120,7 +120,7 @@ const StocktakeLists = ({ setAuth }) => {
     const getDistinctProducts = async () => {
       try {
         const response = await fetch(
-          "/products/get/distinct",
+          "/routes/products/get/distinct",
           {
             method: "GET",
             headers: { token: localStorage.token },
@@ -149,7 +149,7 @@ const StocktakeLists = ({ setAuth }) => {
   const writeSales = (product_id, sales, stocktake) => {
     try {
       const body = { product_id, sales, stocktake };
-      fetch("/inventory/writesales", {
+      fetch("/routes/inventory/writesales", {
         method: "POST",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify(body),
@@ -163,7 +163,7 @@ const StocktakeLists = ({ setAuth }) => {
   const getSalesData = async (product, prevStocktake, currentStocktake) => {
     try {
       const body = { prevStocktake, currentStocktake, product };
-      const response = await fetch(`/inventory/sales`, {
+      const response = await fetch(`/routes/inventory/sales`, {
         method: "POST",
         headers: { "Content-type": "application/json" },
         body: JSON.stringify(body),

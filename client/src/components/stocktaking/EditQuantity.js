@@ -9,7 +9,7 @@ const EditQuantity = ({ product }) => {
     e.preventDefault();
     try {
       const body = { quantity };
-      await fetch(`/products/${product.product_id}`, {
+      await fetch(`/routes/products/${product.product_id}`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
