@@ -21,7 +21,7 @@ router.get("/activestocktake", async (req, res) => {
 router.post("/new", async (req, res) => {
   try {
     const addStocktake = await pool.query(
-      "INSERT INTO stocktake (stocktake_date) VALUES (TIMESTAMP '2020-08-27 10:00:00') RETURNING *"
+      "INSERT INTO stocktake (stocktake_date) VALUES (TIMESTAMP '2020-09-06 10:00:00') RETURNING *"
     );
     res.json(addStocktake);
   } catch (err) {
