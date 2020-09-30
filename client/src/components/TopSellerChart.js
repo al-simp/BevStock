@@ -72,6 +72,13 @@ const TopSellerChart = ({
             text: "Top Selling Products",
           },
           scales: {
+            xAxes: [
+              {
+                ticks: {
+                  display: false, //this will remove only the label
+                },
+              },
+            ],
             yAxes: [
               {
                 ticks: {
