@@ -66,7 +66,7 @@ const Login = ({ setAuth }) => {
   // get stocktaking duties.
   const getDuties = async () => {
     try {
-      const response = await fetch("/dashboard/duties", {
+      const response = await fetch(`routes/dashboard/duties/${localStorage.getItem("id")}`, {
         method: "GET",
         headers: { token: localStorage.token },
       });

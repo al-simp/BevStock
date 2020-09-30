@@ -38,6 +38,7 @@ const UserDashboard = ({ setAuth }) => {
       });
 
       const parseRes = await response.json();
+      console.log(parseRes);
       if (parseRes.length > 0) {
         setHasDuties(true);
       }
