@@ -36,7 +36,7 @@ const StockRecords = () => {
               <td>
                 <Moment
                   date={stocktake.stocktake_date}
-                  format="DD/MM/YYYY HH:mm"
+                  format="DD/MM/YYYY"
                 />
               </td>
               <td>{stocktake.stocktake_id}</td>
