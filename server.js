@@ -47,11 +47,10 @@ app.post("/subscribe/:user", (req, res) => {
     role.user === "Admin"
       ? "Stocktake in progress"
       : "You have assigned stocktaking duties";
-  console.log(message);
+  
   //get push subscription object
   const subscription = req.body;
 
-  console.log("User role", role.user);
   // Send 201 - resource created
   res.status(201).json({});
 
@@ -77,6 +76,8 @@ app.use("/routes/products", require("./routes/products"));
 
 app.use("/routes/inventory", require("./routes/inventory"));
 
+app.use("/routes/dashboard", require("./routes/dashboard"));
+
 app.use("/stocktake", require("./routes/stocktake"));
 
 app.get("*", (req, res) => {
@@ -84,5 +85,5 @@ app.get("*", (req, res) => {
 });
 
 app.listen(PORT, function () {
-  console.log(`Server running on port ${PORT}`);
+  (`Server running on port ${PORT}`);
 });

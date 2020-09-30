@@ -1,6 +1,8 @@
 import React, { Fragment } from "react";
 import { useState } from "react";
 import { toast } from "react-toastify";
+
+//component to add new product to the products database
 const AddNewProduct = ({ setProductsChange }) => {
   const [inputs, setInputs] = useState({
     name: "",
@@ -15,7 +17,6 @@ const AddNewProduct = ({ setProductsChange }) => {
 
   //Method to fire once the form has been submitted
   const onSubmitForm = async (e) => {
-    
     //find the modal and assign to a Javascript const
     const modal = document.getElementById("product-modal");
     e.preventDefault();
@@ -30,21 +31,20 @@ const AddNewProduct = ({ setProductsChange }) => {
     const category = productCategory.value;
 
     try {
-
-    //fill the request body with the new details
+      //fill the request body with the new details
       const body = { name, size, par, category };
 
-    //make a post request through the /products/ server route
+      //make a post request through the /products/ server route
       const response = await fetch("/routes/products/new", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(body),
       });
 
-    //wait for the response from the server-side
+      //wait for the response from the server-side
       await response.json();
 
-    //notifictation displayed 
+      //notifictation displayed
       toast.success("Registered Successfully!");
 
       setInputs({
@@ -55,8 +55,6 @@ const AddNewProduct = ({ setProductsChange }) => {
 
       //set products change in order to fire useEffect hook
       setProductsChange(true);
-
-      
     } catch (err) {
       console.error(err.message);
     }
@@ -66,7 +64,7 @@ const AddNewProduct = ({ setProductsChange }) => {
     <Fragment>
       <button
         type="button"
-        className="btn-sm btn-primary form-control"
+        className="btn btn-primary btn-sm float-right"
         data-toggle="modal"
         data-target="#product-modal"
       >
@@ -83,9 +81,7 @@ const AddNewProduct = ({ setProductsChange }) => {
               </button>
             </div>
             <div className="modal-body">
-
               <form onSubmit={onSubmitForm}>
-              
                 <input
                   type="text"
                   name="name"

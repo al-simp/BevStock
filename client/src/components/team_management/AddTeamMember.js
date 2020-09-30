@@ -1,6 +1,7 @@
 import React, { Fragment, useState } from "react";
 import { toast } from "react-toastify";
 
+// modal component for adding a new team member. 
 const AddTeamMember = ({ setTeamChange }) => {
   const [inputs, setInputs] = useState({
     email: "",
@@ -14,9 +15,12 @@ const AddTeamMember = ({ setTeamChange }) => {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
   };
 
+  // when you click add on the modal, this method fires. 
   const onSubmitForm = async (e) => {
     const modal = document.getElementById("myModal");
     e.preventDefault();
+
+    // close the modal using js.
     modal.setAttribute("style", "display: none");
     const modalBackdrops = document.getElementsByClassName("modal-backdrop");
     document.body.removeChild(modalBackdrops[0]);
@@ -37,6 +41,7 @@ const AddTeamMember = ({ setTeamChange }) => {
 
       toast.success("Registered Successfully!");
 
+      // reset the inputs. 
       setInputs({
         email: "",
         password: "",
@@ -53,7 +58,7 @@ const AddTeamMember = ({ setTeamChange }) => {
     <Fragment>
       <button
         type="button"
-        className="btn btn-info btn-lg"
+        className="btn btn-info btn"
         data-toggle="modal"
         data-target="#myModal"
       >

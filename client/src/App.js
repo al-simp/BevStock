@@ -1,4 +1,4 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 
 import {
   BrowserRouter as Router,
@@ -14,7 +14,6 @@ import "./dashboard.css";
 //components
 import Dashboard from "./components/Dashboard";
 import Login from "./components/Login";
-import Landing from "./components/Landing";
 import Stocktaking from "./components/stocktaking/Stocktaking";
 import TeamManagement from "./components/team_management/TeamManagement";
 import Count from "./components/stocktaking/Count";
@@ -28,6 +27,7 @@ import Nav from "./components/Nav";
 import ProductsDb from "./components/inventory/ProductsDB";
 import ProcessDelivery from "./components/inventory/ProcessDelivery";
 import PreviousStocktakeRecords from "./components/inventory/PreviousStocktakeRecords";
+import SalesData from "./components/SalesData";
 
 toast.configure();
 
@@ -40,7 +40,7 @@ const App = () => {
   const userType = localStorage.getItem("role");
 
   //check if user is authorised
-  async function isAuth() {
+  const isAuth = async () => {
     try {
       const response = await fetch("/auth/is-verify", {
         method: "GET",
@@ -48,13 +48,12 @@ const App = () => {
       });
 
       const parseRes = await response.json();
-      console.log("isAuth", parseRes);
 
       parseRes === true ? setIsAuthenticated(true) : setIsAuthenticated(false);
     } catch (err) {
       console.error(err.message);
     }
-  }
+  };
 
   useEffect(() => {
     isAuth();
@@ -71,17 +70,6 @@ const App = () => {
       <Switch>
         <Route
           exact
-          path="/"
-          render={(props) =>
-            !isAuthenticated ? (
-              <Landing {...props} />
-            ) : (
-              <Redirect to="/dashboard" />
-            )
-          }
-        />
-        <Route
-          exact
           path="/login"
           render={(props) =>
             isAuthenticated ? (
@@ -91,6 +79,18 @@ const App = () => {
             )
           }
         />
+        <Route
+          exact
+          path="/"
+          render={(props) =>
+            isAuthenticated ? (
+              <Dashboard {...props} setAuth={setAuth} name={name} />
+            ) : (
+              <Redirect to="/login" />
+            )
+          }
+        />
+
         <Route
           exact
           path="/dashboard"
@@ -196,6 +196,17 @@ const App = () => {
           render={(props) =>
             isAuthenticated ? (
               <ProductsDb {...props} setAuth={setAuth} />
+            ) : (
+              <Redirect to="/login" />
+            )
+          }
+        />
+        <Route
+          exact
+          path="/salesData"
+          render={(props) =>
+            isAuthenticated ? (
+              <SalesData {...props} setAuth={setAuth} />
             ) : (
               <Redirect to="/login" />
             )

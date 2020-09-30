@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Bar } from "react-chartjs-2";
-import _ from "lodash";
 
+// chart component that shows top 5 selling products, either of the week or all time. .
 const TopSellerChart = ({
   weekData,
   weekLabels,
@@ -12,6 +12,7 @@ const TopSellerChart = ({
   const [labels, setLabels] = useState([]);
   const [isAllTime, setIsAllTime] = useState([]);
 
+  // method for week sales
   const showThisWeek = () => {
     setData(weekData);
     setLabels(weekLabels);
@@ -22,11 +23,12 @@ const TopSellerChart = ({
     setData(allTimeData);
     setLabels(allTimeLabels);
     setIsAllTime(true);
-  }
-
+  };
+  // method for all time sales.
   useEffect(() => {
     showThisWeek();
-  }, [])
+    // eslint-disable-next-line
+  }, []);
 
   return (
     <div>
@@ -35,10 +37,18 @@ const TopSellerChart = ({
         role="group"
         aria-label="Basic example"
       >
-        <button type="button" onClick={showThisWeek} className={!isAllTime ? ("btn btn-primary active") : ("btn btn-primary")}>
+        <button
+          type="button"
+          onClick={showThisWeek}
+          className={!isAllTime ? "btn btn-primary active" : "btn btn-primary"}
+        >
           This Week
         </button>
-        <button type="button" onClick={showAllTime} className={isAllTime ? ("btn btn-primary active") : ("btn btn-primary")}>
+        <button
+          type="button"
+          onClick={showAllTime}
+          className={isAllTime ? "btn btn-primary active" : "btn btn-primary"}
+        >
           All Time
         </button>
       </div>

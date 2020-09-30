@@ -1,17 +1,15 @@
 import React, { useEffect, useState } from "react";
 import Moment from "react-moment";
 
+// component displayed on dashboard that shows the previous stocktake records.
 const StockRecords = () => {
   const [stocktakes, setStocktakes] = useState([]);
   const getStoctakes = async () => {
     try {
-      const response = await fetch(
-        "/routes/inventory/stocktakes",
-        {
-          method: "GET",
-          headers: { token: localStorage.token },
-        }
-      );
+      const response = await fetch("/routes/inventory/stocktakes", {
+        method: "GET",
+        headers: { token: localStorage.token },
+      });
       const parseRes = await response.json();
       setStocktakes(parseRes);
     } catch (error) {}
@@ -33,14 +31,25 @@ const StockRecords = () => {
           </tr>
         </thead>
         <tbody>
-            {stocktakes.map((stocktake) => (
-                <tr key={stocktake.stocktake_id}>
-                    <td><Moment date ={stocktake.stocktake_date} format="DD/MM/YYYY HH:mm"/></td>
-                    <td>{stocktake.stocktake_id}</td>
-                    <td><a className="badge badge-pill badge-primary" href={`/stocktakerecord/${stocktake.stocktake_id}`}
->View</a></td>
-                </tr>
-            ))}
+          {stocktakes.map((stocktake) => (
+            <tr key={stocktake.stocktake_id}>
+              <td>
+                <Moment
+                  date={stocktake.stocktake_date}
+                  format="DD/MM/YYYY HH:mm"
+                />
+              </td>
+              <td>{stocktake.stocktake_id}</td>
+              <td>
+                <a
+                  className="badge badge-pill badge-primary"
+                  href={`/stocktakerecord/${stocktake.stocktake_id}`}
+                >
+                  View
+                </a>
+              </td>
+            </tr>
+          ))}
         </tbody>
       </table>
     </div>

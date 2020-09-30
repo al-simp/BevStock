@@ -43,6 +43,7 @@ router.post("/inactive", async (req, res) => {
   }
 });
 
+// get a specific stocktake by it's id. 
 router.get("/getstocktake/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -56,6 +57,7 @@ router.get("/getstocktake/:id", async (req, res) => {
   }
 });
 
+// update product quantity
 router.put("/count", async (req, res) => {
   try {
     const { item, stocktake, tempQuantity } = req.body;
@@ -67,17 +69,19 @@ router.put("/count", async (req, res) => {
   } catch (error) {}
 });
 
+// process delivery route for adding on new stock. 
 router.get("/processdelivery/:stocktake", async (req, res) => {
   try {
     const { stocktake } = req.params;
     const getList = await pool.query(
-      "SELECT ps.product_stocklist_id, p.product_name, sq.quantity FROM product p join product_stocklist ps ON (p.product_id = ps.product_id) JOIN stocktake_quantity sq ON (sq.product_stocklist_id = ps.product_stocklist_id) WHERE sq.stocktake = $1 AND ps.stocklist_id = 59",
+      "SELECT ps.product_stocklist_id, p.product_name, p.product_category, p.product_size, sq.quantity FROM product p join product_stocklist ps ON (p.product_id = ps.product_id) JOIN stocktake_quantity sq ON (sq.product_stocklist_id = ps.product_stocklist_id) WHERE sq.stocktake = $1 AND ps.stocklist_id = 59",
       [stocktake]
     );
     res.json(getList.rows);
   } catch (error) {}
 });
 
+// get all products from product stocklist
 router.get("/", async (req, res) => {
   try {
     const getAllProducts = await pool.query("SELECT * from product_stocklist");
@@ -87,6 +91,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// generate a new stocktake record. 
 router.post("/generate", async (req, res) => {
   try {
     const { id, stockId } = req.body;
@@ -100,11 +105,12 @@ router.post("/generate", async (req, res) => {
   }
 });
 
+// show all the products on a specified list for a stocktake. 
 router.post("/liststocktake/", async (req, res) => {
   try {
     const { id, stocktake } = req.body;
     const listProductsCount = await pool.query(
-      "SELECT ps.product_stocklist_id, p.product_name, sq.quantity FROM product p join product_stocklist ps ON (p.product_id = ps.product_id) JOIN stocktake_quantity sq ON (sq.product_stocklist_id = ps.product_stocklist_id) WHERE sq.stocktake = $1 AND ps.stocklist_id = $2",
+      "SELECT ps.product_stocklist_id, p.product_name, sq.quantity, index FROM product p join product_stocklist ps ON (p.product_id = ps.product_id) JOIN stocktake_quantity sq ON (sq.product_stocklist_id = ps.product_stocklist_id) WHERE sq.stocktake = $1 AND ps.stocklist_id = $2 ORDER BY index ASC",
       [stocktake, id]
     );
     res.json(listProductsCount.rows);
@@ -113,6 +119,7 @@ router.post("/liststocktake/", async (req, res) => {
   }
 });
 
+// slect a product with quantity. 
 router.post("/productfromid/", async (req, res) => {
   try {
     const { result, stocktake } = req.body;
@@ -126,6 +133,7 @@ router.post("/productfromid/", async (req, res) => {
   }
 });
 
+// mark a stocklist as complete. 
 router.post("/markascomplete", async (req, res) => {
   try {
     const { id, stocktakeInstance, message } = req.body;

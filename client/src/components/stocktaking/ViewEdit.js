@@ -4,18 +4,25 @@ import Product from "./Product";
 import "../../../src/App.css";
 import { toast } from "react-toastify";
 
+// component that allows user to edit sotcklists/ stock areas. 
 const ViewEdit = (props) => {
   const [name, setName] = useState([]);
   const [products, setProducts] = useState([]);
   const [productsChange, setProductsChange] = useState(false);
   const [dragging, setDragging] = useState(false);
+  const [stocktake, setStocktake] = useState(false);
 
   const dragItem = useRef();
   const dragNode = useRef();
 
   const [dragMode, setDragMode] = useState(false);
 
-  const id = props.match.params.id;
+  //if stock ID exists, set stocktake to true.
+  const checkStocktake = () => {
+    if (localStorage.getItem("stocktake") !== null) {
+      setStocktake(true);
+    }
+  };
 
   //handle drag start
   const handleDragStart = (e, params) => {
@@ -56,25 +63,22 @@ const ViewEdit = (props) => {
   };
 
   //set the positions in the DB
-  async function setPosition(id, productI) {
+  const setPosition = async (id, productI) => {
     try {
       const body = { id, productI };
-      const response = await fetch(
-        `/routes/stocklists/savepositions`,
-        {
-          method: "POST",
-          headers: { "Content-type": "application/json" },
-          body: JSON.stringify(body),
-        }
-      );
+      const response = await fetch(`/routes/stocklists/savepositions`, {
+        method: "POST",
+        headers: { "Content-type": "application/json" },
+        body: JSON.stringify(body),
+      });
       await response.json;
     } catch (error) {
       console.error(error.message);
     }
-  }
+  };
 
   //set the positions of each element in the database under index column
-  async function setPositions() {
+  const setPositions = async () => {
     if (dragMode) {
       products.map((product, productI) => {
         setPosition(product.product_stocklist_id, productI);
@@ -85,8 +89,9 @@ const ViewEdit = (props) => {
     } else {
       setDragMode(true);
     }
-  }
+  };
 
+  // get styles fir when item is being drageed. 
   const getStyles = (params) => {
     const currentItem = dragItem.current;
     if (currentItem.productI === params) {
@@ -98,13 +103,10 @@ const ViewEdit = (props) => {
   //get list name
   const getName = async (id) => {
     try {
-      const response = await fetch(
-        `/routes/stocklists/get/${id}`,
-        {
-          method: "GET",
-          headers: { token: localStorage.token },
-        }
-      );
+      const response = await fetch(`/routes/stocklists/get/${id}`, {
+        method: "GET",
+        headers: { token: localStorage.token },
+      });
 
       const parseRes = await response.json();
 
@@ -117,13 +119,10 @@ const ViewEdit = (props) => {
   //get products on list
   const getProducts = async (id) => {
     try {
-      const response = await fetch(
-        `/routes/stocklists/list/${id}`,
-        {
-          method: "GET",
-          headers: { token: localStorage.token },
-        }
-      );
+      const response = await fetch(`/routes/stocklists/list/${id}`, {
+        method: "GET",
+        headers: { token: localStorage.token },
+      });
 
       const parseRes = await response.json();
 
@@ -148,10 +147,11 @@ const ViewEdit = (props) => {
   };
 
   useEffect(() => {
+    checkStocktake();
     getName(props.match.params.id);
     getProducts(props.match.params.id);
     setProductsChange(false);
-  }, [productsChange]);
+  }, [productsChange, props.match.params.id]);
 
   return (
     <Fragment>
@@ -161,70 +161,83 @@ const ViewEdit = (props) => {
             <div className="jumbotron">
               <div className="container">
                 <h1 className="display-3">{name}</h1>
-                <button
-                  className="btn btn-primary float-right"
-                  onClick={setPositions}
-                >
-                  {dragMode ? "Save Positions" : "Change List Order"}
-                </button>
-                <div>
-                  <Dropdown listId={id} setProductsChange={setProductsChange} />
-                </div>
+                {!stocktake ? (
+                  <Fragment>
+                    <button
+                      className="btn btn-primary float-right"
+                      onClick={setPositions}
+                    >
+                      {dragMode ? "Save Positions" : "Change List Order"}
+                    </button>
+                    <div>
+                      <Dropdown
+                        listId={props.match.params.id}
+                        setProductsChange={setProductsChange}
+                      />
+                    </div>
+                  </Fragment>
+                ) : (
+                  <h6>
+                    Cannot edit stock areas when a stocktake is in progress
+                  </h6>
+                )}
               </div>
             </div>
-            <table className="table mt-5 text-center">
-              <thead>
-                <tr>
-                  <th>Product</th>
-                  {dragMode ? null : <th>Delete</th>}
-                </tr>
-              </thead>
-              {dragMode ? (
-                <tbody>
-                  {products.map((product, productI) => (
-                    <tr
-                      draggable
-                      onDragStart={(e) => {
-                        handleDragStart(e, { productI });
-                      }}
-                      onDragEnter={
-                        dragging
-                          ? (e) => {
-                              handleDragEnter(e, { productI });
-                            }
-                          : null
-                      }
-                      key={product.product_stocklist_id}
-                      className={dragging ? getStyles(productI) : "dnd-item"}
-                    >
-                      <Product
+            {!stocktake ? (
+              <table className="table mt-5 text-center">
+                <thead>
+                  <tr>
+                    <th>Product</th>
+                    {dragMode ? null : <th>Delete</th>}
+                  </tr>
+                </thead>
+                {dragMode ? (
+                  <tbody>
+                    {products.map((product, productI) => (
+                      <tr
+                        draggable
+                        onDragStart={(e) => {
+                          handleDragStart(e, { productI });
+                        }}
+                        onDragEnter={
+                          dragging
+                            ? (e) => {
+                                handleDragEnter(e, { productI });
+                              }
+                            : null
+                        }
                         key={product.product_stocklist_id}
-                        name={product.product_name}
-                        id={product.product_stocklist_id}
-                      />
-                    </tr>
-                  ))}
-                </tbody>
-              ) : (
-                <tbody>
-                  {products.map((product) => (
-                    <tr key={product.product_stocklist_id}>
-                      <td>{product.product_name}</td>
-                      <td>
-                        <button
-                          className="btn btn-danger"
-                          onClick={(e) =>
-                            deleteProduct(product.product_stocklist_id)
-                          }
-                        >
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              )}
-            </table>
+                        className={dragging ? getStyles(productI) : "dnd-item"}
+                      >
+                        <Product
+                          key={product.product_stocklist_id}
+                          name={product.product_name}
+                          id={product.product_stocklist_id}
+                        />
+                      </tr>
+                    ))}
+                  </tbody>
+                ) : (
+                  <tbody>
+                    {products.map((product) => (
+                      <tr key={product.product_stocklist_id}>
+                        <td>{product.product_name}</td>
+                        <td>
+                          <button
+                            className="btn btn-danger"
+                            onClick={(e) =>
+                              deleteProduct(product.product_stocklist_id)
+                            }
+                          >
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                )}
+              </table>
+            ) : null}
           </main>
         </div>
       </div>

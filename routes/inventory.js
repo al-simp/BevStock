@@ -2,6 +2,7 @@ const router = require("express").Router();
 const pool = require("../db");
 const { authorisation } = require("../middleware/authorisation");
 
+// get product quantities. 
 router.get("/records/:id", async (req, res) => {
   try {
     const { id } = req.params;
@@ -29,6 +30,7 @@ router.get("/stocktake/:id", async (req, res) => {
   }
 });
 
+// get inventory breakdown
 router.post("/breakdown", async (req, res) => {
   try {
     const { id, product } = req.body;
@@ -68,6 +70,18 @@ router.post("/sales", async (req, res) => {
   }
 });
 
+//get the top sellers for the stock period.
+router.get("/topsellers/all/:stocktake", async (req, res) => {
+  try {
+    const { stocktake } = req.params;
+    const getTopSellers = await pool.query(
+      "SELECT p.product_name, s.sales FROM sales_record s JOIN product p ON (s.product_id = p.product_id) WHERE s.stocktake = $1 ORDER BY s.sales DESC",
+      [stocktake]
+    );
+    res.json(getTopSellers.rows);
+  } catch (error) {}
+});
+
 //get the top 5 sellers for the stock period.
 router.get("/topsellers/:stocktake", async (req, res) => {
   try {
@@ -75,6 +89,16 @@ router.get("/topsellers/:stocktake", async (req, res) => {
     const getTopSellers = await pool.query(
       "SELECT p.product_name, s.sales FROM sales_record s JOIN product p ON (s.product_id = p.product_id) WHERE s.stocktake = $1 ORDER BY s.sales DESC LIMIT 5",
       [stocktake]
+    );
+    res.json(getTopSellers.rows);
+  } catch (error) {}
+});
+
+//get the top sellers of all time.
+router.get("/alltimetopsellers/all", async (req, res) => {
+  try {
+    const getTopSellers = await pool.query(
+      "SELECT SUM (s.sales), p.product_name from sales_record s JOIN product p ON (p.product_id = s.product_id) GROUP BY p.product_id ORDER BY SUM DESC"
     );
     res.json(getTopSellers.rows);
   } catch (error) {}

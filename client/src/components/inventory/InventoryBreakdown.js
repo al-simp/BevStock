@@ -1,10 +1,11 @@
 import React, { Fragment, useState, useEffect } from "react";
 
+//component to display a model that breaks doen where stock is located, by area
 const InventoryBreakdown = ({ product_id, id, name }) => {
     const [breakdown, setBreakdown] = useState([]);
   const product = product_id;
 
-
+//get the inventory breakdown
   const getInventoryBreakdown = async () => {
     try {
       const body = { id, product };
@@ -18,7 +19,6 @@ const InventoryBreakdown = ({ product_id, id, name }) => {
       );
       const parseRes = await response.json();
       setBreakdown(parseRes);
-      console.log(parseRes);
     } catch (error) {
       console.error(error.message);
     }
@@ -27,13 +27,14 @@ const InventoryBreakdown = ({ product_id, id, name }) => {
 
   useEffect(() => {
     getInventoryBreakdown();
+    // eslint-disable-next-line 
   }, []);
 
   return (
     <Fragment>
       <button
         type="button"
-        className="btn btn-info"
+        className="btn btn-sm btn-info"
         data-toggle="modal"
         data-target={`#id${product_id}`}
       >

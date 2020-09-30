@@ -1,62 +1,51 @@
 import React from "react";
 import { useEffect, useState } from "react";
-import _ from "lodash";
 import { toast } from "react-toastify";
 
+// component to save new stock that has arrived on site. 
 const ProcessDelivery = () => {
   //declare products as an empty array
   const [products, setProducts] = useState([]);
   const [search, setSearch] = useState("");
-  const [quantities, setQuantities] = useState([]);
-  const [isProcessing, setIsProcessing] = useState(false);
-  const dateString = Date().toString();
-  //boolean to indicate whether there has been a change in the products array
-  const [productsChange, setProductsChange] = useState(false);
   const stocktake = localStorage.getItem("laststocktake");
 
+  // add the item to stock. 
   const addNewStock = async (event, product) => {
     event.preventDefault();
     const item = product.product_stocklist_id;
     const quantityInput = document.getElementById(product.product_stocklist_id);
     const tempQuantity = quantityInput.value;
-    console.log(item, tempQuantity);
     try {
-        const body = { item, stocktake, tempQuantity };
-        console.log(body);
-        const response = await fetch("/stocktake/count", {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        });
-  
-        await response.json();
-        toast.success("Added Succesfully");
-  
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
+      const body = { item, stocktake, tempQuantity };
+      const response = await fetch("/stocktake/count", {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
 
-
+      await response.json();
+      toast.success("Added Succesfully");
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
 
   //get the products that are under the new stock list
   const getProducts = async () => {
     try {
       const response = await fetch(
-        `/stocktake/processdelivery/${localStorage.getItem(
-          "laststocktake"
-        )}`,
+        `/stocktake/processdelivery/${localStorage.getItem("laststocktake")}`,
         {
           method: "GET",
           headers: { token: localStorage.token },
         }
       );
       const parseRes = await response.json();
-      console.log("hello");
       setProducts(parseRes);
     } catch (error) {}
   };
 
+  // a filter to let the user search for a specific
   const filteredProducts = products.filter((item) => {
     return item.product_name.toLowerCase().includes(search.toLowerCase());
   });
@@ -85,7 +74,7 @@ const ProcessDelivery = () => {
             <th>Product</th>
             <th>Size</th>
             <th>Category</th>
-            <th>Quantity</th>
+            <th></th>
           </tr>
         </thead>
         <tbody>
@@ -95,7 +84,7 @@ const ProcessDelivery = () => {
               <td>{product.product_size}</td>
               <td>{product.product_category}</td>
 
-              <td>
+              <td className="float-right">
                 <form
                   onSubmit={(e) => {
                     addNewStock(e, product);
@@ -103,8 +92,8 @@ const ProcessDelivery = () => {
                 >
                   <input
                     id={`${product.product_stocklist_id}`}
-                    className="form-control"
                     type="number"
+                    className="form"
                   ></input>
                   <button className="btn btn-success">Add</button>
                 </form>

@@ -1,9 +1,14 @@
 import React, { Fragment, useState } from "react";
-import Bottle from "../../images/beer-bottle.png";
+import Bottle from "../../images/bottle.png";
 import { useEffect } from "react";
 
 //Modal that opens when counting a particular product. Preoduct is passed in as props
-const CountModal = ({ product, setProductsChange, stocktakeid, setQuantity, setQuantityChange }) => {
+const CountModal = ({
+  product,
+  stocktakeid,
+  setQuantity,
+  setQuantityChange,
+}) => {
   const [partial, setPartial] = useState(0);
   const [tempQuantity, setTempQuantity] = useState(0);
   const stocktake = Number(stocktakeid);
@@ -33,7 +38,7 @@ const CountModal = ({ product, setProductsChange, stocktakeid, setQuantity, setQ
   const setProductQuantity = async (item) => {
     try {
       const body = { item, stocktake, tempQuantity };
-      console.log(body);
+
       const response = await fetch("/stocktake/count", {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
@@ -43,14 +48,11 @@ const CountModal = ({ product, setProductsChange, stocktakeid, setQuantity, setQ
       const parseRes = await response.json();
 
       setQuantity(parseRes.rows[0].quantity);
-
     } catch (error) {
       console.error(error.message);
     }
     setTempQuantity(0);
-    setProductsChange(true);
-    setQuantityChange(true);
-    
+    window.location.reload(false);
   };
 
   useEffect(() => {}, [tempQuantity]);
@@ -75,54 +77,48 @@ const CountModal = ({ product, setProductsChange, stocktakeid, setQuantity, setQ
             <div className="modal-body"></div>
             <div className="container">
               <h5>Add partial</h5>
-              <div className="row">
-                <div className="col-sm">
-                  <form>
-                    <input
-                      value={partial}
-                      onChange={(e) => onChange(e)}
-                      name="partial"
-                      className="form-control mb-4"
-                      type="number"
-                      placeholder="0.00"
-                      step="0.05"
-                      min="0"
-                      max="1.0"
-                    ></input>
-                  </form>
-                </div>
-
-                <div className="col-sm">
-                  <button className="btn btn-info" onClick={addPartial}>
-                    Add
-                  </button>
-                </div>
+              <div className="form-group-row">
+                <form>
+                  <input
+                    value={partial}
+                    onChange={(e) => onChange(e)}
+                    name="partial"
+                    className="form-control"
+                    type="number"
+                    placeholder="0.00"
+                    step="0.05"
+                    min="0"
+                    max="1.0"
+                  ></input>
+                </form>
+                <button
+                  className="btn btn-info form-control mb-4"
+                  onClick={addPartial}
+                >
+                  Add
+                </button>
               </div>
-              <h5>Add full</h5>
+              <h5 className="mb-4">Add full</h5>
               <div className="row">
-                <div className="col-sm">
-                  <button className="btn btn-danger" onClick={minusOne}>
+                <div className="col">
+                  <button className="btn btn-danger mt-5" onClick={minusOne}>
                     <h4>-</h4>
                   </button>
                 </div>
-                <div className="col-sm">
-                  <img
-                    src={Bottle}
-                    alt="Bottle Image"
-                    height="140"
-                    width="140"
-    
-                />
+                <div className="col">
+                  <img src={Bottle} alt="Bottle" height="210" width="80" />
                 </div>
-                <div className="col-sm">
-                  <button className="btn btn-success" onClick={addOne}>
+                <div className="col">
+                  <button className="btn btn-success mt-5" onClick={addOne}>
                     <h4>+</h4>
                   </button>
                 </div>
               </div>
               <div className="row">
                 <div className="col-sm"></div>
-                <div className="col-sm">{tempQuantity}</div>
+                <div className="col-sm">
+                  <h3 className="mt-3">{tempQuantity}</h3>
+                </div>
                 <div className="col-sm"></div>
               </div>
             </div>
@@ -130,7 +126,9 @@ const CountModal = ({ product, setProductsChange, stocktakeid, setQuantity, setQ
               <button
                 className="btn btn-success"
                 data-dismiss="modal"
-                onClick={(e) => setProductQuantity(product.product_stocklist_id)}
+                onClick={(e) =>
+                  setProductQuantity(product.product_stocklist_id)
+                }
               >
                 Add
               </button>

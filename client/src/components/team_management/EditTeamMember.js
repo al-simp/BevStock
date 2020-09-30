@@ -1,25 +1,21 @@
 import React, { Fragment, useState } from "react";
 import { toast } from "react-toastify";
 
+// modal component for editing a team members details.
 const EditTeamMember = ({ member, setTeamChange }) => {
-
-
+  // get the current details.
   const [name, setName] = useState(member.user_name);
   const [email, setEmail] = useState(member.user_email);
-  
+  // set the current details.
   const setDetails = (username, email) => {
     setName(username);
-    setEmail(email)
-  }
-
-  const editDetails = async id => {
+    setEmail(email);
+  };
+  // when edit is clicked, save the new details.
+  const editDetails = async (id) => {
     try {
       const body = { name, email };
-
-      
-
       const myHeaders = new Headers();
-
 
       myHeaders.append("Content-Type", "application/json");
       myHeaders.append("token", localStorage.token);
@@ -30,15 +26,13 @@ const EditTeamMember = ({ member, setTeamChange }) => {
         body: JSON.stringify(body),
       });
 
-      toast.success("Details updated successfully!")
+      toast.success("Details updated successfully!");
 
       setTeamChange(true);
-      
     } catch (err) {
       console.log(err.message);
     }
   };
-  
 
   return (
     <Fragment>
@@ -89,7 +83,7 @@ const EditTeamMember = ({ member, setTeamChange }) => {
                 type="button"
                 className="btn btn-warning"
                 data-dismiss="modal"
-                onClick={e => editDetails(member.user_id)}
+                onClick={(e) => editDetails(member.user_id)}
               >
                 Edit
               </button>

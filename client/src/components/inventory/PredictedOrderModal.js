@@ -1,12 +1,16 @@
-import React, { Fragment, useState, useEffect } from "react";
+import React, { Fragment } from "react";
 import PDFPredictedOrder from "./PDFPredictedOrder";
 import _ from "lodash";
 
+// modal component that displays a predicted order based on previous consumption
 const PredictedOrderModal = ({ levels }) => {
+  
+  // determine items that will run out in the coming week using a filter
   const filteredItems = levels.filter(function (el) {
     return el.sum - el.avg_weekly_sales < 0;
   });
 
+  // map through filtered items, add the amount of stock needed for a week. 
   const predictedOrder = filteredItems.map((item) => {
     return {
       id: item.product_id,
@@ -53,7 +57,7 @@ const PredictedOrderModal = ({ levels }) => {
                       <td>{item.name}</td>
                       <td>{item.size}</td>
                       <td>{item.category}</td>
-                      <td>{item.quantity}</td>
+                      <td>{Number(item.quantity).toFixed(0)}</td>
                     </tr>
                   );
                 })}

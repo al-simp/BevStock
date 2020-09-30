@@ -2,50 +2,48 @@ import React, { useState, useEffect } from "react";
 import ShowTeam from "./ShowTeam";
 import AddTeamMember from "./AddTeamMember";
 
-//components
-
+//Parent team management component, contains the showteam and addteammember children.
 const TeamManagement = () => {
-    const [allTeamMembers, setTeamMembers] = useState([]);
-    const [teamChange, setTeamChange] = useState(false);
+  const [allTeamMembers, setTeamMembers] = useState([]);
+  const [teamChange, setTeamChange] = useState(false);
 
-    // get the team members from the db to populate allTeamMembers array
-    const getTeam = async () => {
-        try {
-            const response = await fetch("/routes/teammanagement/", {
-                method: "GET",
-                headers: { token: localStorage.token },
-            });
+  // get the team members from the db to populate allTeamMembers array
+  const getTeam = async () => {
+    try {
+      const response = await fetch("/routes/teammanagement/", {
+        method: "GET",
+        headers: { token: localStorage.token },
+      });
 
-            const parseData = await response.json();
+      const parseData = await response.json();
 
-            setTeamMembers(parseData);
+      setTeamMembers(parseData);
+    } catch (err) {
+      console.error(err.message);
+    }
+  };
 
-        } catch (err) {
-            console.error(err.message);
-        }
-    };
+  useEffect(() => {
+    getTeam();
+    setTeamChange(false);
+  }, [teamChange]);
 
-    useEffect(() => {
-      getTeam();
-      setTeamChange(false)
-    }, [teamChange]);
+  return (
+    <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
+      <div className="jumbotron">
+        <div className="container">
+          <h1 className="display-3">Team Management</h1>
+          <AddTeamMember setTeamChange={setTeamChange} />
+        </div>
+      </div>
+      <div>
+        <ShowTeam
+          allTeamMembers={allTeamMembers}
+          setTeamChange={setTeamChange}
+        />
+      </div>
+    </main>
+  );
+};
 
-    return (
-      <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-          <div className="jumbotron">
-            <div className="container">
-              <h1 className="display-3">Team Management</h1>
-              <AddTeamMember setTeamChange={setTeamChange}/>
-            </div>
-            
-          </div>
-          <div>
-            <ShowTeam allTeamMembers={allTeamMembers} setTeamChange={setTeamChange} />
-          </div>
-        </main>
-      );
-    };
-    
-    export default TeamManagement;
-    
-
+export default TeamManagement;

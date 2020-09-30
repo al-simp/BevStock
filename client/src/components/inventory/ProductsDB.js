@@ -2,6 +2,7 @@ import React from "react";
 import { useEffect, useState } from "react";
 import AddNewProduct from "./AddNewProduct";
 
+// component to show all products listed in the database. User can add a product if it is not included. 
 const ProductsDb = () => {
   //declare products as an empty array
   const [products, setProducts] = useState([]);
@@ -25,6 +26,7 @@ const ProductsDb = () => {
     }
   };
 
+  //filter to let the user search for a specific product. 
   const filteredProducts = products.filter((item) => {
     return item.product_name.toLowerCase().includes(search.toLowerCase());
   });
@@ -35,7 +37,10 @@ const ProductsDb = () => {
 
   return (
     <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-      <h1>Products</h1>
+      <h1>
+        Products
+        <AddNewProduct setProductsChange={setProductsChange} />
+      </h1>
       <div className="row">
         <div className="col-9">
           <input
@@ -45,16 +50,16 @@ const ProductsDb = () => {
             onChange={(e) => setSearch(e.target.value)}
           />
         </div>
-        <div className="col-2">
-          <AddNewProduct setProductsChange={setProductsChange} />
-        </div>
+        <div className="col-2"></div>
       </div>
       <table className="table table-striped table-sm">
         <thead>
-          <th>Product</th>
-          <th>Size</th>
-          <th>Category</th>
-          <th>Par Level</th>
+          <tr>
+            <th>Product</th>
+            <th>Size</th>
+            <th>Category</th>
+            <th>Par Level</th>
+          </tr>
         </thead>
         <tbody>
           {filteredProducts.map((product) => (

@@ -1,29 +1,41 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, Fragment } from "react";
 import Moment from "react-moment";
+import moment from "moment";
 
 import { toast } from "react-toastify";
 
-//components
+// Parent component of showlists, takes care of stocktake starting and ending.
 import ShowLists from "./ShowLists";
 
-const StocktakeLists = ({ setAuth }) => {
+const StocktakeLists = () => {
   const [stocktake, setStocktake] = useState(false);
   const [allLists, setLists] = useState([]);
   const [listsChange, setListsChange] = useState(false);
   const [products, setProducts] = useState([]);
   const [allCounted, setAllCounted] = useState(false);
   const [distinctProducts, setDistinctProducts] = useState([]);
+  const [stocktakeDue, setStocktakeDue] = useState(false);
   const currentStocktake = localStorage.getItem("laststocktake");
   const dateString = Date().toString();
 
   const stocktake_id = localStorage.getItem("stocktake");
 
+  // check if a stocktake is in progress. 
   const checkStocktake = () => {
     if (stocktake_id !== null) {
       setStocktake(true);
+    } else {
+      var now = moment();
+      var date = moment(localStorage.getItem("nextstocktakedate"));
+      if (now > date) {
+        setStocktakeDue(true);
+      } else {
+        setStocktakeDue(false);
+      }
     }
   };
 
+  // get the products. 
   const getProducts = async (id) => {
     try {
       const productsResponse = await fetch("/stocktake/", {
@@ -79,6 +91,7 @@ const StocktakeLists = ({ setAuth }) => {
     }
   };
 
+  // get the lists to pass into the ShowLists component because unidirectional data-flow. 
   const getLists = async () => {
     try {
       const response = await fetch("/routes/stocklists/", {
@@ -93,15 +106,13 @@ const StocktakeLists = ({ setAuth }) => {
     }
   };
 
+  // check all assigned lists are marked as complete when trying to end a stocktake. 
   const checkAllCounted = async () => {
     try {
-      const response = await fetch(
-        "/routes/stocklists/inprogress",
-        {
-          method: "GET",
-          headers: { token: localStorage.token },
-        }
-      );
+      const response = await fetch("/routes/stocklists/inprogress", {
+        method: "GET",
+        headers: { token: localStorage.token },
+      });
 
       const parseData = await response.json();
 
@@ -113,37 +124,37 @@ const StocktakeLists = ({ setAuth }) => {
     } catch (error) {}
   };
 
+  //CALCULATING AND WRITING SALES TO THE DATABASE AFTER STOCKTAKE HAS ENDED
 
-  //CALCULATING AND WRITING SALES TO THE DATABASE AFTER STOCKTAKE HAS ENDED 
-
-    //get a list of distinct products for caluculating sales
-    const getDistinctProducts = async () => {
-      try {
-        const response = await fetch(
-          "/routes/products/get/distinct",
-          {
-            method: "GET",
-            headers: { token: localStorage.token },
-          }
-        );
-        const parseRes = await response.json();
-        setDistinctProducts(parseRes);
-      } catch (error) {
-        console.error(error.message);
-      }
-    };
-
-    //get the sales data, wait for promise to resolve then write to the database in sales_record table
-    const getAndWriteSalesNumbers = async (products) => {
-      var promises = products.map((product) => {
-        return getSalesData(product.product_id, Number(currentStocktake), Number(currentStocktake)+1);
+  //get a list of distinct products for caluculating sales
+  const getDistinctProducts = async () => {
+    try {
+      const response = await fetch("/routes/products/get/distinct", {
+        method: "GET",
+        headers: { token: localStorage.token },
       });
-      promises.forEach((promise) => {
-        promise.then((result) => {
-          writeSales(result.product_id, result.sales, stocktake_id);
-        });
+      const parseRes = await response.json();
+      setDistinctProducts(parseRes);
+    } catch (error) {
+      console.error(error.message);
+    }
+  };
+
+  //get the sales data, wait for promise to resolve then write to the database in sales_record table
+  const getAndWriteSalesNumbers = async (products) => {
+    var promises = products.map((product) => {
+      return getSalesData(
+        product.product_id,
+        Number(currentStocktake),
+        Number(currentStocktake) + 1
+      );
+    });
+    promises.forEach((promise) => {
+      promise.then((result) => {
+        writeSales(result.product_id, result.sales, stocktake_id);
       });
-    };
+    });
+  };
 
   //write the sales numbers into the db
   const writeSales = (product_id, sales, stocktake) => {
@@ -206,14 +217,6 @@ const StocktakeLists = ({ setAuth }) => {
     }
   };
 
-  //logout onclick
-  const logout = (e) => {
-    e.preventDefault();
-    localStorage.removeItem("token");
-    setAuth(false);
-    toast.success("Logged out succsessfully!");
-  };
-
   useEffect(() => {
     getDistinctProducts();
     checkAllCounted();
@@ -222,25 +225,33 @@ const StocktakeLists = ({ setAuth }) => {
     getLists();
     setListsChange(false);
     if (products.length > 0) {
-      console.log(products);
     }
+    // eslint-disable-next-line 
   }, [listsChange]);
 
   return !stocktake_id ? (
     <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
       <div className="jumbotron">
-        <button
-          className="btn btn-primary float-right"
-          onClick={(e) => logout(e)}
-        >
-          Logout
-        </button>
         <div className="container">
           <h1 className="display-3">Stocktake</h1>
-          <h4>Create a new stocktaking record for {dateString}?</h4>
-          <button className="btn btn-info" onClick={newStocktake}>
-            Start Stocktake
-          </button>
+          {stocktakeDue ? (
+            <Fragment>
+              <h4>
+                Create a new stocktaking record for{" "}
+                <Moment date={dateString} format="LL" />?
+              </h4>
+              <button className="btn btn-info" onClick={newStocktake}>
+                Start Stocktake
+              </button>
+            </Fragment>
+          ) : (
+            <h4 className="text-success">
+              You are all up to date! Next stocktake due on{" "}
+              <Moment format="LL">
+                {localStorage.getItem("nextstocktakedate")}
+              </Moment>
+            </h4>
+          )}{" "}
         </div>
       </div>
     </main>

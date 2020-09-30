@@ -1,7 +1,7 @@
 import React from "react";
-import _ from "lodash";
-import PredictedOrderModal from "./PredictedOrderModal";
 
+import PredictedOrderModal from "./PredictedOrderModal";
+// component that compares average weekly sales with stock on site, shows an alert if product is likely to run out, or is out of stock completely
 const ProductAlerts = ({ levels }) => {
   return (
     <div>
@@ -17,12 +17,13 @@ const ProductAlerts = ({ levels }) => {
           </tr>
         </thead>
         <tbody>
+        {/* eslint-disable-next-line */}
           {levels.map((item) => {
             if (item.avg_weekly_sales > Number(item.sum)) {
               return (
                 <tr key={item.product_id}>
                   <td>{item.product_name}</td>
-                  <td>{item.avg_weekly_sales}</td>
+                  <td>{Number(item.avg_weekly_sales).toFixed(2)}</td>
                   {Number(item.sum) === 0 ? (
                     <td>
                       <span className="badge badge-pill badge-danger">

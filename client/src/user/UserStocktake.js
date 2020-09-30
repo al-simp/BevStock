@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 //components
 import UserShowLists from "./UserShowLists";
 
+// user stocktaking component. 
 const UserStocktake = ({ setAuth }) => {
   const [stocktake, setStocktake] = useState(false);
   const [allLists, setLists] = useState([]);
@@ -12,14 +13,14 @@ const UserStocktake = ({ setAuth }) => {
 
   const stocktake_id = localStorage.getItem("stocktake");
 
+  // check if a stocktake is in progress. 
   const checkStocktake = () => {
-    console.log("hello")
     if (stocktake_id !== null) {
-      console.log("stocktake in progress");
       setStocktake(true);
     }
   };
 
+  // get stocktaking lists. 
   const getLists = async () => {
     try {
       const response = await fetch("/routes/stocklists/", {
@@ -34,6 +35,7 @@ const UserStocktake = ({ setAuth }) => {
     }
   };
 
+  // logout method. 
   const logout = (e) => {
     e.preventDefault();
     localStorage.removeItem("token");
@@ -45,6 +47,7 @@ const UserStocktake = ({ setAuth }) => {
     checkStocktake();
     getLists();
     setListsChange(false);
+    // eslint-disable-next-line
   }, [listsChange]);
 
   return (
@@ -61,7 +64,12 @@ const UserStocktake = ({ setAuth }) => {
         </div>
       </div>
       <div>
-        <UserShowLists allLists={allLists} setListsChange={setListsChange} stocktake={stocktake} stocktake_id={stocktake_id}/>
+        <UserShowLists
+          allLists={allLists}
+          setListsChange={setListsChange}
+          stocktake={stocktake}
+          stocktake_id={stocktake_id}
+        />
       </div>
     </main>
   );

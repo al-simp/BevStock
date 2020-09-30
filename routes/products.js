@@ -14,6 +14,7 @@ router.get("/", async(req, res) => {
     }
 })
 
+// get a specific product from it's id. 
 router.get("/:id", async(req,res) => {
     try {
         const { id } = req.params;
@@ -26,6 +27,7 @@ router.get("/:id", async(req,res) => {
     }
 })
 
+// get all products, with no duplicates. 
 router.get("/get/distinct", async(req, res) => {
     try {
         const allProducts = await pool.query("SELECT DISTINCT product_id FROM product");

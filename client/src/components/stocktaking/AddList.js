@@ -1,8 +1,10 @@
 import React, { Fragment, useState } from "react";
 
+// component for creating a new stocklist/stock area
 const AddList = ({ setListsChange }) => {
     const [stocklist_name, setStocklistName] = useState("");
   
+    // fire API call on form submission to add new record to DB
     const onSubmitForm = async e => {
       e.preventDefault();
       try {

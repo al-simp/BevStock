@@ -1,7 +1,8 @@
-import React, { PureComponent, useState } from "react";
+import React from "react";
 import jsPDF from "jspdf";
 import "jspdf-autotable";
 
+// pdf generator for inventory PDFs. 
 const PdfGenerator = ({ inventory }) => {
   // jspdf generator function
   const jsPdfGenerator = () => {
@@ -10,9 +11,14 @@ const PdfGenerator = ({ inventory }) => {
     var doc = new jsPDF("p", "pt");
 
     doc.autoTable({
-      head: [["Product","Size", "Category", "Quantity"]],
+      head: [["Product", "Size", "Category", "Quantity"]],
       body: inventory.map((item) => {
-        return [item.product_name, item.product_size, item.product_category, item.sum];
+        return [
+          item.product_name,
+          item.product_size,
+          item.product_category,
+          item.sum,
+        ];
       }),
     });
 
@@ -20,11 +26,12 @@ const PdfGenerator = ({ inventory }) => {
   };
 
   return (
-    <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
-      <button className="btn btn-success" onClick={jsPdfGenerator}>
-        Generate PDF Report
-      </button>
-    </main>
+    <button
+      className="btn btn-success btn-sm float-right"
+      onClick={jsPdfGenerator}
+    >
+      Generate PDF Report
+    </button>
   );
 };
 

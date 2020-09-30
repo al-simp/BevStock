@@ -3,7 +3,7 @@ require("dotenv").config()
 
 // middleware to check if the token in storage is valid. Using this in any private routes
 
-async function authorisation(req, res, next) {
+const authorisation = async (req, res, next) => {
     try {
 
         const jwtToken = req.header("token");
@@ -18,8 +18,6 @@ async function authorisation(req, res, next) {
         const verify = jwt.verify(jwtToken, process.env.jwtSecret);
 
         req.user = verify.user;
-
-        console.log("hellooo", verify);
         
         next();
 
@@ -32,7 +30,7 @@ async function authorisation(req, res, next) {
 
 // middleware to check if user is an admin user. 
 
-function adminAuth(req, res, next) {
+const adminAuth = async (req, res, next) => {
     
     try {
         

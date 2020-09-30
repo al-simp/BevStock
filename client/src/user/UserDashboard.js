@@ -1,21 +1,21 @@
 import React, { Fragment, useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import _ from "lodash";
+import Moment from "react-moment";
+import scales from "../components/images/Scales.png"
 
+// user dashboard component.
 const UserDashboard = ({ setAuth }) => {
-  const [name, setName] = useState("");
   const [stocktake, setStocktake] = useState({});
   const [hasDuties, setHasDuties] = useState(false);
 
-  async function checkStocktake() {
+  // check if stocktake is in progress.
+  const checkStocktake = async () => {
     try {
-      const response = await fetch(
-        "/stocktake/activestocktake",
-        {
-          method: "GET",
-          headers: { token: localStorage.token },
-        }
-      );
+      const response = await fetch("/stocktake/activestocktake", {
+        method: "GET",
+        headers: { token: localStorage.token },
+      });
 
       const parseRes = await response.json();
 
@@ -24,49 +24,29 @@ const UserDashboard = ({ setAuth }) => {
         localStorage.setItem("stocktake", parseRes[0].stocktake_id);
         localStorage.setItem("stocktakedate", parseRes[0].stocktake_date);
       } else {
-        console.log("no stocktake in progress");
       }
     } catch (error) {
       console.error(error.message);
     }
-  }
+  };
 
-  async function getDuties() {
+  // get stocktaking duties..
+  const getDuties = async () => {
     try {
-      const response = await fetch("routes/dashboard/duties", {
-        method: "GET",
-        headers: { token: localStorage.token },
+      const response = await fetch(`routes/dashboard/duties/${localStorage.getItem("id")}`, {
+        method: "GET"
       });
 
       const parseRes = await response.json();
-
       if (parseRes.length > 0) {
         setHasDuties(true);
       }
-      console.log(parseRes);
     } catch (err) {
       console.log(err.message);
     }
-  }
+  };
 
-  async function getName() {
-    try {
-      const response = await fetch("/routes/dashboard/", {
-        method: "GET",
-        headers: { token: localStorage.token },
-      });
-
-      const parseRes = await response.json();
-
-      console.log(parseRes);
-      localStorage.setItem("user", parseRes.user_id);
-      setName(parseRes.user_name);
-    } catch (err) {
-      console.log(err.message);
-    }
-    console.log(name);
-  }
-
+  // logout method.
   const logout = (e) => {
     e.preventDefault();
     localStorage.clear();
@@ -77,7 +57,6 @@ const UserDashboard = ({ setAuth }) => {
 
   useEffect(() => {
     getDuties();
-    getName();
     checkStocktake();
   }, []);
 
@@ -92,30 +71,41 @@ const UserDashboard = ({ setAuth }) => {
             Logout
           </button>
           <div className="container">
-            <h1 className="display-3">Hello, {name}!</h1>
+            <h1 className="display-3">
+              Hello, {localStorage.getItem("name")}!
+            </h1>
             <p>Welcome to your BevStock user dashboard.</p>
           </div>
         </div>
 
         <div className="container">
           <div className="row">
-            <div className="col-md-4">
+            <div className="col-md-4 flexbox text-center">
+              <img
+                className="rounded-circle mb-4"
+                src={scales}
+                alt="Generic placeholder"
+                width="140"
+                height="140"
+              ></img>
               <h2>Stocktaking</h2>
               {!_.isEmpty(stocktake) ? (
                 <div>
                   <p>
                     Stocktake in progress :{" "}
-                    {localStorage.getItem("stocktakedate")}
+                    <Moment format="LL">
+                      {localStorage.getItem("stocktakedate")}
+                    </Moment>
                   </p>
                   {hasDuties ? (
                     <div>
                       <p>You have been assigned stocktaking duties</p>
                       <p>
                         <Link
-                          className="btn btn-secondary"
+                          className="btn btn-success"
                           to="/userstocktaking"
                         >
-                          View
+                          View Duties
                         </Link>
                       </p>
                     </div>

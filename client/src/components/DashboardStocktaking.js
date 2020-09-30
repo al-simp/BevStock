@@ -1,6 +1,8 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
+import Moment from "react-moment";
 
-const DashboardStocktaking = ({ stocktake, stocktake_id, setListsChange }) => {
+// child component of stocktaking, shows if a sh=tocktake is due. if stocktake is in progress shows assigned lists. 
+const DashboardStocktaking = ({ stocktake, stocktake_id, stocktakeDue }) => {
   const [assignedLists, setAssignedLists] = useState([]);
   const [unassignedLists, setUnassignedLists] = useState([]);
   const [allLists, setAllLists] = useState([]);
@@ -27,7 +29,6 @@ const DashboardStocktaking = ({ stocktake, stocktake_id, setListsChange }) => {
         body: JSON.stringify(body),
       });
       const parseRes = await assignedLists.json();
-      console.log(parseRes);
       setAssignedLists(parseRes);
     } catch (error) {
       console.error(error.message);
@@ -38,13 +39,15 @@ const DashboardStocktaking = ({ stocktake, stocktake_id, setListsChange }) => {
   const getUnassignedLists = async () => {
     try {
       const body = { stocktake_id };
-      const unassignedLists = await fetch("/routes/stocklists/unassignedlists", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(body),
-      });
+      const unassignedLists = await fetch(
+        "/routes/stocklists/unassignedlists",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }
+      );
       const parseRes = await unassignedLists.json();
-      console.log(parseRes);
       setUnassignedLists(parseRes);
     } catch (error) {
       console.error(error.message);
@@ -55,11 +58,41 @@ const DashboardStocktaking = ({ stocktake, stocktake_id, setListsChange }) => {
     getLists();
     getAssignedLists();
     getUnassignedLists();
+    // eslint-disable-next-line
   }, []);
 
   return !stocktake ? (
     <div>
-      <h6>Stocktaking</h6>
+      {stocktakeDue ? (
+        <Fragment>
+          <h6>
+            Stocktaking{" "}
+            <small className="text-danger">
+              Stocktake Overdue From{" "}
+              <Moment format="LL">
+                {localStorage.getItem("nextstocktakedate")}
+              </Moment>
+            </small>
+            <a
+              type="button"
+              className="btn btn-primary btn-sm float-right mb-2"
+              href={"/stocktakelists"}
+            >
+              Stocktake
+            </a>
+          </h6>
+        </Fragment>
+      ) : (
+        <h6>
+          Stocktaking{" "}
+          <small className="text-success">
+            Next Stocktake{" "}
+            <Moment format="LL">
+              {localStorage.getItem("nextstocktakedate")}
+            </Moment>
+          </small>
+        </h6>
+      )}
       <table className="table table-striped table-sm">
         <thead>
           <tr>
@@ -86,7 +119,9 @@ const DashboardStocktaking = ({ stocktake, stocktake_id, setListsChange }) => {
     </div>
   ) : (
     <div>
-      <h6>Stocktaking: Stocktake in Progress</h6>
+      <h6>
+        Stocktaking <small className="text-danger">Stocktake in Progress</small>
+      </h6>
       <table className="table table-striped table-sm">
         <thead>
           <tr>
@@ -98,17 +133,13 @@ const DashboardStocktaking = ({ stocktake, stocktake_id, setListsChange }) => {
           {unassignedLists.map((list) => (
             <tr key={list.stocklist_id}>
               <td>{list.stocklist_name}</td>
-              <td>
-              Unassigned
-              </td>
+              <td>Unassigned</td>
             </tr>
           ))}
           {assignedLists.map((list) => (
             <tr key={list.stocklist_id}>
               <td>{list.stocklist_name}</td>
-              <td>
-              Assigned: {list.user_name}
-              </td>
+              <td>Assigned: {list.user_name}</td>
             </tr>
           ))}
         </tbody>

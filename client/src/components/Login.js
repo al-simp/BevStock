@@ -3,6 +3,9 @@ import _ from "lodash";
 import { toast } from "react-toastify";
 import Logo from "./images/Logo.png";
 import "../signin.css";
+import moment from "moment";
+
+// login component, assigns a JWT token and stores a load of info in local storage on login. Also sends a push notification if stocktake is in progress, or user has assigned stocktaking duties.
 const Login = ({ setAuth }) => {
   //key for pust notifications API
   const publicVapidKey =
@@ -17,6 +20,7 @@ const Login = ({ setAuth }) => {
     setInputs({ ...inputs, [e.target.name]: e.target.value });
   };
 
+  // when login form is submitted.
   const onSubmitform = async (e) => {
     e.preventDefault();
     try {
@@ -34,6 +38,7 @@ const Login = ({ setAuth }) => {
         localStorage.setItem("token", parseRes.token);
         localStorage.setItem("role", parseRes.role);
         localStorage.setItem("name", parseRes.name);
+        localStorage.setItem("id", parseRes.id);
         await checkStocktake();
         await findLastStocktake();
         if (
@@ -58,7 +63,8 @@ const Login = ({ setAuth }) => {
     }
   };
 
-  async function getDuties() {
+  // get stocktaking duties.
+  const getDuties = async () => {
     try {
       const response = await fetch("/dashboard/duties", {
         method: "GET",
@@ -73,10 +79,10 @@ const Login = ({ setAuth }) => {
     } catch (err) {
       console.log(err.message);
     }
-  }
+  };
 
   //method to check if there are any active stocktakes within the database.
-  async function checkStocktake() {
+  const checkStocktake = async () => {
     try {
       const response = await fetch("/stocktake/activestocktake", {
         method: "GET",
@@ -94,10 +100,10 @@ const Login = ({ setAuth }) => {
     } catch (error) {
       console.error(error.message);
     }
-  }
+  };
 
   //method to find last stocktake for inventory records
-  async function findLastStocktake() {
+  const findLastStocktake = async () => {
     try {
       const response = await fetch("/routes/inventory/latest", {
         method: "GET",
@@ -105,10 +111,15 @@ const Login = ({ setAuth }) => {
       });
       const parseRes = await response.json();
       localStorage.setItem("laststocktake", parseRes[0].stocktake_id);
+      var next = moment(parseRes[0].stocktake_date).add(7, "days");
+      localStorage.setItem(
+        "nextstocktakedate",
+        moment(next).format("YYYY-MM-DDThh:mm:ss")
+      );
     } catch (error) {
       console.error(error.message);
     }
-  }
+  };
 
   // method to send push notification
   const sendPush = () => {
@@ -120,28 +131,22 @@ const Login = ({ setAuth }) => {
   };
 
   //register sw, register push, send push
-  async function send() {
+  const send = async () => {
     //register service worker
-    console.log("registering service worker...");
+    //registering service worker...
     const register = await navigator.serviceWorker.register("worker.js", {
       scope: "/",
     });
 
-    console.log("Service Worker Registered.....");
-
     //register push
-    console.log("Registering push....");
 
     const subscription = await register.pushManager.subscribe({
       userVisibleOnly: true,
       applicationServerKey: urlBase64ToUint8Array(publicVapidKey),
     });
 
-    console.log("push registered..");
-
     // Send push notification
 
-    console.log("sending push");
     await fetch(`/subscribe/${localStorage.getItem("role")}`, {
       method: "POST",
       body: JSON.stringify(subscription),
@@ -149,10 +154,10 @@ const Login = ({ setAuth }) => {
         "content-type": "application/json",
       },
     });
-    console.log("push sent...");
-  }
+  };
 
-  function urlBase64ToUint8Array(base64String) {
+  // method to convert public vapid key to a different format.
+  const urlBase64ToUint8Array = (base64String) => {
     const padding = "=".repeat((4 - (base64String.length % 4)) % 4);
     const base64 = (base64String + padding)
       .replace(/-/g, "+")
@@ -165,32 +170,11 @@ const Login = ({ setAuth }) => {
       outputArray[i] = rawData.charCodeAt(i);
     }
     return outputArray;
-  }
+  };
 
   return (
     <Fragment>
-      {/*} 
-        <form onSubmit={onSubmitform}>
-          <input
-            type="email"
-            name="email"
-            placeholder="email"
-            className="form-control my-3"
-            value={email}
-            onChange={(e) => onChange(e)}
-          />
-          <input
-            type="password"
-            name="password"
-            placeholder="password"
-            className="form-control my-3"
-            onChange={(e) => onChange(e)}
-          />
-          <button className="btn btn-success btn-block">Submit</button>
-        </form>
-      </div> */}
-
-      <body className="text-center">
+      <body className="text-center mt-5">
         <meta charset="utf-8" />
         <meta
           name="viewport"
@@ -202,14 +186,17 @@ const Login = ({ setAuth }) => {
 
         <form className="form-signin" onSubmit={onSubmitform}>
           <img class="mb-4" src={Logo} alt="" width="100" height="100"></img>
-          <h1 className="h3 mb-3 font-weight-normal"></h1>
+          <h1 className="h3 mb-3 font-weight-normal">
+            BevStock <br />
+            <small>Inventory Management</small>
+          </h1>
           <label for="inputEmail" className="sr-only">
             Email address
           </label>
           <input
             type="email"
             name="email"
-            className="form-control"
+            className="form-control mt-4"
             placeholder="Email address"
             value={email}
             onChange={(e) => onChange(e)}

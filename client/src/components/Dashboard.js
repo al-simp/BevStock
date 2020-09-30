@@ -4,39 +4,36 @@ import TopSellerChart from "../components/TopSellerChart";
 import ProductAlerts from "../components/inventory/ProductAlerts";
 import DashBoardStocktaking from "./DashboardStocktaking";
 import StockRecords from "./inventory/StockRecords";
+import moment from "moment";
 import _ from "lodash";
 import "../dashboard.css";
 
-const Dashboard = ({ setAuth, name }) => {
+// dashboard component. 
+const Dashboard = ({ name }) => {
   const [stocktake, setStocktake] = useState(false);
-  const [predictedOrder, setPredictedOrder] = useState([]);
   const [levels, setLevels] = useState([]);
   const [graphLabels, setGraphLabels] = useState([]);
   const [graphData, setGraphData] = useState([]);
   const [allTimeLabels, setAllTimeLabels] = useState([]);
   const [allTimeData, setAllTimeData] = useState([]);
+  const [stocktakeDue, setStocktakeDue] = useState(false);
 
   //get id of stocktake if stocktake in progress
   const stockId = Number(localStorage.getItem("stocktake"));
 
   //if stock ID exists, set stocktake to true.
-  const Stocktake = () => {
+  const checkStocktake = () => {
     if (stockId !== 0) {
       setStocktake(true);
+    } else {
+      var now = moment();
+      var date = moment(localStorage.getItem("nextstocktakedate"));
+      if (now > date) {
+        setStocktakeDue(true);
+      } else {
+        setStocktakeDue(false);
+      }
     }
-  };
-
-  const getPredictedOrder = (levels) => {
-    setPredictedOrder(
-      levels.map((item) => {
-        return {
-          name: item.product_name,
-          predictedOrder: Number(
-            Number(item.sum) - item.avg_weekly_sales + item.par_level
-          ),
-        };
-      })
-    );
   };
 
   //find levels with pars for product alerts components.
@@ -105,20 +102,15 @@ const Dashboard = ({ setAuth, name }) => {
     }
   };
 
-  const getPermission = async () => {
-    Notification.requestPermission().then(function (result) {
-      console.log(result);
-    });
-  };
-
   //get userType for conditional render
   const userType = localStorage.getItem("role");
 
   useEffect(() => {
     getLevels();
     getTopSellers();
-    Stocktake();
+    checkStocktake();
     getTopSellersAllTime();
+    // eslint-disable-next-line 
   }, []);
 
   return userType === "User" ? (
@@ -128,7 +120,8 @@ const Dashboard = ({ setAuth, name }) => {
       <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
         <div className="d-flex justify-content-between flex-wrap flex-md-nowrap align-items-center pb-2 mb-3 border-bottom">
           <h1 className="h2">Welcome back, {name}!</h1>
-          <div className="btn-toolbar mb-2 mb-md-0"></div>
+          <div className="btn-toolbar mb-2 mb-md-0">
+          </div>
         </div>
 
         <div className="row">
@@ -157,8 +150,11 @@ const Dashboard = ({ setAuth, name }) => {
             <StockRecords />
           </div>
           <div className="col-md-6">
-        {console.log(stockId)}
-            <DashBoardStocktaking stocktake={stocktake} stocktake_id={stockId}/>
+            <DashBoardStocktaking
+              stocktakeDue={stocktakeDue}
+              stocktake={stocktake}
+              stocktake_id={stockId}
+            />
           </div>
         </div>
       </main>

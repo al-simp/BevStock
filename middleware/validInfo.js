@@ -1,7 +1,7 @@
 module.exports = (req, res, next) => {
     const { email, name, password } = req.body;
 
-    function validEmail(userEmail) {
+    const validEmail = (userEmail) => {
 
         //regex to make sure email address is valid
 

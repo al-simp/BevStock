@@ -11,22 +11,17 @@ const UserShowLists = ({
   const [stocktakeInstance, setStocktakeInstance] = useState([]);
 
   //get the lists that have been assigned to the user
-  async function checkAssignedDuties() {
+  const checkAssignedDuties = async () => {
     try {
       const stocktake_id = localStorage.getItem("stocktake");
-      const id = localStorage.getItem("user");
+      const id = localStorage.getItem("id");
       const body = { id, stocktake_id };
-      console.log(body);
-      const response = await fetch(
-        "/routes/stocklists/userassignedlists",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        }
-      );
+      const response = await fetch("/routes/stocklists/userassignedlists", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
       const parseRes = await response.json();
-      console.log(parseRes);
       setAssignedLists(parseRes);
       if (parseRes.length > 0) {
         setAssignedLists(parseRes);
@@ -34,92 +29,95 @@ const UserShowLists = ({
     } catch (error) {
       console.error(error.message);
     }
-  }
+  };
 
-  async function markComplete(id) {
+  // mark the stocklist as complete when finished.
+  const markComplete = async (id) => {
     const message = document.getElementById(`${id}`).value;
     try {
       const body = { id, stocktakeInstance, message };
-      const response = await fetch(
-        "/stocktake/markascomplete",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        }
-      );
+      const response = await fetch("/stocktake/markascomplete", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
       await response.json();
       setListsChange(true);
     } catch (err) {
       console.error(err.message);
     }
-  }
+  };
 
   useEffect(() => {
     setStocktakeInstance(stocktake_id);
     setListsChange(false);
     checkAssignedDuties();
+    // eslint-disable-next-line
   }, [allLists]);
 
   return (
     <div className="container">
       <div className="row">
         <div className="col">
-          <h4>Your Assigned Stock Areas</h4>
-          <table className="table table-bordered">
-            <thead>
-              <tr>
-                <th>Stock Area</th>
-                <th>Count</th>
-                <th>Manager Message</th>
-                <th>Your Message</th>
-                <th>Status</th>
-              </tr>
-            </thead>
-            <tbody>
-            {console.log(assignedLists)}
-              {assignedLists.map((list) => (
+          <h3 className="text-center mb-4">Your Assigned Stock Areas</h3>
+          {assignedLists.map((list) => (
+            <table className="table table-bordered">
+              <tbody>
                 <tr key={list.stocklist_id}>
-                  <td>{list.stocklist_name}</td>
-                  <td>
-                    <Link
-                      to={`count/${list.stocklist_id}/${stocktakeInstance}`}
-                      className="btn btn-primary"
-                    >
-                      Count
-                    </Link>
-                  </td>
-                  <td>{list.user_message}</td>
-                  {list.completed ? (
-                    <Fragment>
-                      <td>{list.completed_message}</td>
-                      <td>Complete</td>
-                    </Fragment>
-                  ) : (
-                    <Fragment>
-                      <td>
-                        <textarea
-                          id={`${list.stocklist_id}`}
-                          cols="40"
-                          rows="2"
-                        ></textarea>
-                      </td>
-                      <td>
-                        <button
-                          className="btn btn-success"
-                          onClick={(e) => {
-                            markComplete(list.stocklist_id);
-                          }}
-                        >
-                          Mark as complete
-                        </button>
-                      </td>
-                    </Fragment>
-                  )}
+                  <th className="text-center">{list.stocklist_name}</th>
                 </tr>
-              ))}
-            </tbody>
-          </table>
+                <tr>
+                  {!list.completed ? (
+                    <td>
+                      <Link
+                        to={`count/${list.stocklist_id}/${stocktakeInstance}`}
+                        className="btn btn-primary form-control"
+                      >
+                        Count
+                      </Link>
+                    </td>
+                  ) : null}
+                </tr>
+                <tr>
+                  <th className="text-center">Manager Message</th>
+                </tr>
+                <tr>
+                  <td className="text-center">{list.user_message}</td>
+                </tr>
+                {list.completed ? (
+                  <Fragment>
+                    <tr>
+                      <th className="text-center">Your Message</th>
+                    </tr>
+                    <td className="text-center">{list.completed_message}</td>
+                    <tr>
+                      <td className="text-center">Complete</td>
+                    </tr>
+                  </Fragment>
+                ) : (
+                  <Fragment>
+                    <td>
+                      <textarea
+                        className="form-control"
+                        id={`${list.stocklist_id}`}
+                        cols="40"
+                        rows="2"
+                      ></textarea>
+
+                      <button
+                        className="btn btn-success form-control"
+                        onClick={(e) => {
+                          markComplete(list.stocklist_id);
+                        }}
+                      >
+                        Mark as complete
+                      </button>
+                    </td>
+                  </Fragment>
+                )}
+              </tbody>
+            </table>
+          ))}
         </div>
       </div>
     </div>

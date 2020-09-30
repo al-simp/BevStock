@@ -2,6 +2,7 @@ import React, { useState, useEffect } from "react";
 import { Link } from "react-router-dom";
 import AssignList from "./AssignList";
 
+// component to show all stocklists, when in a stocktake will show assigned and unassigned lists. Child component of StocktakeLists
 const ShowLists = ({ allLists, setListsChange, stocktake, stocktake_id }) => {
   const [assignedLists, setAssignedLists] = useState([]);
   const [unassignedLists, setUnassignedLists] = useState([]);
@@ -12,16 +13,12 @@ const ShowLists = ({ allLists, setListsChange, stocktake, stocktake_id }) => {
   const getAssignedLists = async () => {
     try {
       const body = { stocktake_id };
-      const assignedLists = await fetch(
-        "/routes/stocklists/assignedlists",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        }
-      );
+      const assignedLists = await fetch("/routes/stocklists/assignedlists", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
       const parseRes = await assignedLists.json();
-      console.log(parseRes);
       setAssignedLists(parseRes);
     } catch (error) {
       console.error(error.message);
@@ -47,17 +44,15 @@ const ShowLists = ({ allLists, setListsChange, stocktake, stocktake_id }) => {
     }
   };
 
+  // method to unassign a list.
   const unassign = async (id) => {
     try {
       const body = { id, stocktake_id };
-      const unassign = await fetch(
-        "/routes/stocklists/unassignuser",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        }
-      );
+      const unassign = await fetch("/routes/stocklists/unassignuser", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
       await unassign.json();
       setListsChange(true);
     } catch (error) {}
@@ -87,6 +82,7 @@ const ShowLists = ({ allLists, setListsChange, stocktake, stocktake_id }) => {
       getAssignedLists();
       getUnassignedLists();
     }
+    //eslint-disable-next-line
   }, [allLists]);
 
   return !stocktake ? (
@@ -176,16 +172,25 @@ const ShowLists = ({ allLists, setListsChange, stocktake, stocktake_id }) => {
                   <td>{list.stocklist_name}</td>
                   <td>{list.user_name}</td>
                   {list.completed ? (
-                    <td><span className="badge badge-pill badge-success">Completed</span></td>
+                    <td>
+                      <span className="badge badge-pill badge-success">
+                        Completed
+                      </span>
+                    </td>
                   ) : (
                     <td>
-                    <span className="badge badge-pill badge-warning">In Progress</span>
-                      <button href="#" className="badge badge-pill badge-danger" onClick={(e) => unassign(list.stocklist_id)}>
+                      <span className="badge badge-pill badge-warning">
+                        In Progress
+                      </span>
+                      <button
+                        href="#"
+                        className="badge badge-pill badge-danger"
+                        onClick={(e) => unassign(list.stocklist_id)}
+                      >
                         Unassign
                       </button>
                     </td>
-                  )
-                  }
+                  )}
                   <td>{list.user_message}</td>
                 </tr>
               ))}

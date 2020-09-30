@@ -1,47 +1,36 @@
-import React, { useEffect, useState } from "react";
+import React, { Fragment, useEffect, useState } from "react";
 import _ from "lodash";
 import CountModal from "./CountModal";
 
+// component is required for QR scan function, when the QR scanner detects a valid QR code it will display the modal for counting that product.
 const Bottle = (props) => {
-  const [bottle, setBottle] = useState({});
+  const [product, setProduct] = useState({});
 
   const {
     result,
-    hasScanned,
     hasResult,
+    hasScanned,
     setPairBool,
-    setProductsChange,
     setQuantity,
   } = props;
   const stocktake = localStorage.getItem("stocktake");
 
+  // fetch the product from the relevant id
   const getBottle = async () => {
+    // only make the API call if a result has been found
     if (result !== null && !hasResult && !hasScanned) {
-      console.log(
-        "result",
-        result,
-        "scanned",
-        hasScanned,
-        "hasResult",
-        hasResult
-      );
       setPairBool("hasScanned", true);
       try {
         const body = { result, stocktake };
-        const response = await fetch(
-          "/stocktake/productfromid",
-          {
-            method: "POST",
-            headers: { "Content-type": "application/json" },
-            body: JSON.stringify(body),
-          }
-        );
+        const response = await fetch("/stocktake/productfromid", {
+          method: "POST",
+          headers: { "Content-type": "application/json" },
+          body: JSON.stringify(body),
+        });
 
         const parseData = await response.json();
 
-        console.log(parseData.length);
-        setBottle(parseData[0]);
-        console.log(parseData);
+        setProduct(parseData[0]);
         setPairBool("hasResult", true);
       } catch (err) {
         console.error(err.message);
@@ -54,19 +43,22 @@ const Bottle = (props) => {
     if (!hasResult) {
       getBottle();
     }
-  }, [result, bottle]);
+    // eslint-disable-next-line
+  }, [result]);
 
-  return !_.isEmpty(bottle) ? (
-    <div>
-      <CountModal
-        product={bottle}
-        stocktakeid={stocktake}
-        setProductsChange={setProductsChange}
-        setQuantity={setQuantity}
-      />
-    </div>
+  return !_.isEmpty(product) ? (
+    <Fragment>
+      <div className="row">
+        <br />
+        <CountModal
+          product={product}
+          stocktakeid={stocktake}
+          setQuantity={setQuantity}
+        />
+      </div>
+    </Fragment>
   ) : (
-    <h1>No bottle found</h1>
+    <h4>No bottle found </h4>
   );
 };
 

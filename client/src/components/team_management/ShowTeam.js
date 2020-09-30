@@ -3,9 +3,11 @@ import React, { Fragment, useState, useEffect } from "react";
 //components
 import EditTeamMember from "./EditTeamMember";
 
+// component to show all the team members in the db
 const ShowTeam = ({ allTeamMembers, setTeamChange }) => {
   const [team, setTeamMembers] = useState([]); // assigned to an empty array
 
+  // function to set team member to inactive.
   const deleteTeamMember = async (id) => {
     try {
       await fetch(`/routes/teammanagement/delete/${id}`, {
@@ -20,8 +22,7 @@ const ShowTeam = ({ allTeamMembers, setTeamChange }) => {
     setTeamChange(true);
   };
 
-  useEffect(() => {
-  }, []);
+  useEffect(() => {}, []);
 
   return (
     <Fragment>

@@ -1,14 +1,23 @@
 import React, { useState, useEffect } from "react";
-import { toast } from "react-toastify";
 
 //components
 import AddList from "./AddList";
 import ShowLists from "./ShowLists";
 
-const Stocklists = ({ setAuth }) => {
+// parent of view/edit component, shows the stocklists/areas, will allow to edit if not is stocktake mode. 
+const Stocklists = () => {
   const [allLists, setLists] = useState([]);
   const [listsChange, setListsChange] = useState(false);
+  const [stocktake, setStocktake] = useState(false);
 
+  //if stock ID exists, set stocktake to true.
+  const checkStocktake = () => {
+    if (localStorage.getItem("stocktake") !== null) {
+      setStocktake(true);
+    }
+  };
+
+  // get all the stocklists. 
   const getLists = async () => {
     try {
       const response = await fetch("/routes/stocklists/", {
@@ -23,14 +32,8 @@ const Stocklists = ({ setAuth }) => {
     }
   };
 
-  const logout = (e) => {
-    e.preventDefault();
-    localStorage.removeItem("token");
-    setAuth(false);
-    toast.success("Logged out succsessfully!");
-  };
-
   useEffect(() => {
+    checkStocktake();
     getLists();
     setListsChange(false);
   }, [listsChange]);
@@ -38,21 +41,21 @@ const Stocklists = ({ setAuth }) => {
   return (
     <main role="main" className="col-md-9 ml-sm-auto col-lg-10 pt-3 px-4">
       <div className="jumbotron">
-        <button
-          className="btn btn-primary float-right"
-          onClick={(e) => logout(e)}
-        >
-          Logout
-        </button>
         <div className="container">
           <h1 className="display-3">Stock Areas</h1>
           <div>
-            <AddList setListsChange={setListsChange} />
+            {!stocktake ? (
+              <AddList setListsChange={setListsChange} />
+            ) : (
+              <h6>Cannot edit stock areas when a stocktake is in progress</h6>
+            )}
           </div>
         </div>
       </div>
       <div>
-        <ShowLists allLists={allLists} setListsChange={setListsChange} />
+        {!stocktake ? (
+          <ShowLists allLists={allLists} setListsChange={setListsChange} />
+        ) : null}
       </div>
     </main>
   );

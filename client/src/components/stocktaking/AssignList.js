@@ -1,17 +1,16 @@
 import React, { Fragment, useState, useEffect } from "react";
 
+// modal component that shows a list of staff, allows the admin user to assign a specific stock area to a specific employee. 
 const AssignList = ({ name, stocklist_id, setListsChange }) => {
   const [users, setUsers] = useState([]);
   const stocktake_id = localStorage.getItem("stocktake");
 
+  // get all of the team members
   const getTeamMembers = async () => {
     try {
-      const response = await fetch(
-        "/routes/teammanagement/users",
-        {
-          method: "GET",
-        }
-      );
+      const response = await fetch("/routes/teammanagement/users", {
+        method: "GET",
+      });
 
       const parseRes = await response.json();
       setUsers(parseRes);
@@ -20,10 +19,10 @@ const AssignList = ({ name, stocklist_id, setListsChange }) => {
     }
   };
 
-  async function assignToUser(event, user) {
+  // assign to the selected users. 
+  const assignToUser = async (event, user) => {
     event.preventDefault();
     const userMessage = document.getElementById(user.user_id).value;
-    console.log(user, userMessage);
     const id = user.user_id;
 
     const modal = document.getElementById(`id${stocklist_id}`);
@@ -34,20 +33,17 @@ const AssignList = ({ name, stocklist_id, setListsChange }) => {
 
     try {
       const body = { stocklist_id, stocktake_id, id, userMessage };
-      const response = await fetch(
-        "/routes/stocklists/assignlist",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        }
-      );
+      const response = await fetch("/routes/stocklists/assignlist", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
       await response.json();
       setListsChange(true);
     } catch (error) {
       console.error(error.message);
     }
-  }
+  };
 
   useEffect(() => {
     getTeamMembers();
