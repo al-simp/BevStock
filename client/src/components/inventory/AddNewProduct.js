@@ -107,12 +107,12 @@ const AddNewProduct = ({ setProductsChange }) => {
                   onChange={(e) => onChange(e)}
                 />
                 <select className="form-control my-3" id="category">
-                  <option value="Rum">Vodka</option>
-                  <option value="Vodka">Rum</option>
-                  <option value="Vodka">Liqueur</option>
-                  <option value="Vodka">Tequila</option>
-                  <option value="Vodka">Whiskey</option>
-                  <option value="Vodka">Beer</option>
+                  <option value="Vodka">Vodka</option>
+                  <option value="Rum">Rum</option>
+                  <option value="Liqueur">Liqueur</option>
+                  <option value="Tequila">Tequila</option>
+                  <option value="Whiskey">Whiskey</option>
+                  <option value="Beer">Beer</option>
                 </select>
                 <button className="btn btn-success btn-block">Submit</button>
               </form>
