@@ -12,7 +12,7 @@ const Dropdown = ({ listId, setQuantityChange, setProductsChange }) => {
 
   // check if a stocktake is in progress. 
   const checkStocktake = () => {
-    if (localStorage.getItem("stocktake") !== 0) {
+    if (localStorage.getItem("stocktake") !== null) {
       setStocktakeBoo(true);
     }
   };
