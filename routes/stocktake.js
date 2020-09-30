@@ -74,7 +74,7 @@ router.get("/processdelivery/:stocktake", async (req, res) => {
   try {
     const { stocktake } = req.params;
     const getList = await pool.query(
-      "SELECT ps.product_stocklist_id, p.product_name, p.product_category, p.product_size, sq.quantity FROM product p join product_stocklist ps ON (p.product_id = ps.product_id) JOIN stocktake_quantity sq ON (sq.product_stocklist_id = ps.product_stocklist_id) WHERE sq.stocktake = $1 AND ps.stocklist_id = 59",
+      "SELECT ps.product_stocklist_id, p.product_name, p.product_category, p.product_size, sq.quantity FROM product p join product_stocklist ps ON (p.product_id = ps.product_id) JOIN stocktake_quantity sq ON (sq.product_stocklist_id = ps.product_stocklist_id) WHERE sq.stocktake = $1 AND ps.stocklist_id = 1",
       [stocktake]
     );
     res.json(getList.rows);

@@ -110,8 +110,8 @@ const Login = ({ setAuth }) => {
         headers: { token: localStorage.token },
       });
       const parseRes = await response.json();
-      localStorage.setItem("laststocktake", parseRes[0].stocktake_id);
-      var next = moment(parseRes[0].stocktake_date).add(7, "days");
+      localStorage.setItem("laststocktake", 4393);
+      var next = moment("2020-09-21T10:00:00");
       localStorage.setItem(
         "nextstocktakedate",
         moment(next).format("YYYY-MM-DDThh:mm:ss")

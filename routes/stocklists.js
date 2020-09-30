@@ -8,7 +8,7 @@ const { authorisation } = require("../middleware/authorisation");
 router.get("/", authorisation, async (req, res) => {
   try {
     const allStocklists = await pool.query(
-      "SELECT * FROM stocklist WHERE stocklist_id != 59;"
+      "SELECT * FROM stocklist WHERE stocklist_id != 1;"
     );
     res.json(allStocklists.rows);
   } catch (err) {
@@ -198,7 +198,7 @@ router.post("/unassignedlists", async (req, res) => {
   try {
     const { stocktake_id } = req.body;
     const getUnassigned = await pool.query(
-      "SELECT * FROM stocklist s WHERE stocklist_id NOT IN (SELECT stocklist_id FROM stocklist_stocktake_user WHERE stocktake_id = $1) AND stocklist_id != 59",
+      "SELECT * FROM stocklist s WHERE stocklist_id NOT IN (SELECT stocklist_id FROM stocklist_stocktake_user WHERE stocktake_id = $1) AND stocklist_id != 1",
       [stocktake_id]
     );
     res.json(getUnassigned.rows);

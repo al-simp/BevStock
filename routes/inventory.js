@@ -21,7 +21,7 @@ router.get("/stocktake/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const productquantities = await pool.query(
-      "SELECT p.product_id, p.product_name, p.product_size, p.product_category, SUM (sq.quantity) FROM stocktake_quantity sq JOIN product_stocklist ps ON (sq.product_stocklist_id = ps.product_stocklist_id) JOIN product p ON (ps.product_id = p.product_id) WHERE stocktake = $1 AND ps.stocklist_id != 59 GROUP BY p.product_name, p.product_id",
+      "SELECT p.product_id, p.product_name, p.product_size, p.product_category, SUM (sq.quantity) FROM stocktake_quantity sq JOIN product_stocklist ps ON (sq.product_stocklist_id = ps.product_stocklist_id) JOIN product p ON (ps.product_id = p.product_id) WHERE stocktake = $1 AND ps.stocklist_id != 1 GROUP BY p.product_name, p.product_id",
       [id]
     );
     res.json(productquantities.rows);
