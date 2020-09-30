@@ -11,7 +11,6 @@ router.get("/duties/:id", async (req, res) => {
       [id]
     );
     res.json(duties.rows);
-    console.log(req.user.id);
   } catch (error) {
     console.error(error.message);
   }
