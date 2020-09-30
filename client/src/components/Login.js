@@ -38,7 +38,7 @@ const Login = ({ setAuth }) => {
         localStorage.setItem("token", parseRes.token);
         localStorage.setItem("role", parseRes.role);
         localStorage.setItem("name", parseRes.name);
-        localStorage.setItem("id", parseRes.user_id);
+        localStorage.setItem("id", parseRes.id);
         await checkStocktake();
         await findLastStocktake();
         if (
