@@ -22,36 +22,35 @@ const StockRecords = () => {
   return (
     <div>
       <h6>Previous Stocktake Records</h6>
-      <table className="table table-striped table-sm">
-        <thead>
-          <tr>
-            <th>Stocktake</th>
-            <th>ID</th>
-            <th>View</th>
-          </tr>
-        </thead>
-        <tbody>
-          {stocktakes.map((stocktake) => (
-            <tr key={stocktake.stocktake_id}>
-              <td>
-                <Moment
-                  date={stocktake.stocktake_date}
-                  format="DD/MM/YYYY"
-                />
-              </td>
-              <td>{stocktake.stocktake_id}</td>
-              <td>
-                <a
-                  className="badge badge-pill badge-primary"
-                  href={`/stocktakerecord/${stocktake.stocktake_id}`}
-                >
-                  View
-                </a>
-              </td>
+      <div className="table-responsive-sm">
+        <table className="table table-striped table-sm">
+          <thead>
+            <tr>
+              <th>Stocktake</th>
+              <th>ID</th>
+              <th>View</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
+          </thead>
+          <tbody>
+            {stocktakes.map((stocktake) => (
+              <tr key={stocktake.stocktake_id}>
+                <td>
+                  <Moment date={stocktake.stocktake_date} format="DD/MM/YYYY" />
+                </td>
+                <td>{stocktake.stocktake_id}</td>
+                <td>
+                  <a
+                    className="badge badge-pill badge-primary"
+                    href={`/stocktakerecord/${stocktake.stocktake_id}`}
+                  >
+                    View
+                  </a>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 };
