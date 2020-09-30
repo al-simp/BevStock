@@ -113,6 +113,7 @@ const AddNewProduct = ({ setProductsChange }) => {
                   <option value="Tequila">Tequila</option>
                   <option value="Whiskey">Whiskey</option>
                   <option value="Beer">Beer</option>
+                  <option value="Beer">Gin</option>
                 </select>
                 <button className="btn btn-success btn-block">Submit</button>
               </form>
