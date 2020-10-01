@@ -27,7 +27,7 @@ const StocktakeLists = () => {
     } else {
       var now = moment();
       var date = moment(localStorage.getItem("nextstocktakedate"));
-      if (now > date) {
+      if (now < date) {
         setStocktakeDue(true);
       } else {
         setStocktakeDue(false);

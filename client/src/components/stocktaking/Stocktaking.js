@@ -4,7 +4,7 @@ import React, { useState, useEffect } from "react";
 import AddList from "./AddList";
 import ShowLists from "./ShowLists";
 
-// parent of view/edit component, shows the stocklists/areas, will allow to edit if not is stocktake mode. 
+// parent of view/edit component, shows the stocklists/areas, will allow to edit if not is stocktake mode.
 const Stocklists = () => {
   const [allLists, setLists] = useState([]);
   const [listsChange, setListsChange] = useState(false);
@@ -17,7 +17,7 @@ const Stocklists = () => {
     }
   };
 
-  // get all the stocklists. 
+  // get all the stocklists.
   const getLists = async () => {
     try {
       const response = await fetch("/routes/stocklists/", {
