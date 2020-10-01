@@ -8,7 +8,7 @@ const { authorisation } = require("../middleware/authorisation");
 router.get("/", authorisation, async (req, res) => {
   try {
     const allStocklists = await pool.query(
-      "SELECT * FROM stocklist"
+      "SELECT * FROM stocklist WHERE stocklist_id != 1"
     );
     res.json(allStocklists.rows);
   } catch (err) {

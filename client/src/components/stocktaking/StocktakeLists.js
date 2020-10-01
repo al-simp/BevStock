@@ -194,6 +194,11 @@ const StocktakeLists = () => {
       localStorage.setItem("laststocktake", localStorage.getItem("stocktake"));
       localStorage.removeItem("stocktake");
       localStorage.removeItem("stocktakedate");
+      var next = moment().add(7, "days");
+      localStorage.setItem(
+        "nextstocktakedate",
+        moment(next).format("YYYY-MM-DDThh:mm:ss")
+      );
       setStocktake(false);
       toast.success("Stocktake ended");
       getAndWriteSalesNumbers(distinctProducts);

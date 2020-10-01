@@ -57,8 +57,6 @@ const ProductsDb = () => {
           <tr>
             <th>Product</th>
             <th>Size</th>
-            <th>Category</th>
-            <th>Par Level</th>
           </tr>
         </thead>
         <tbody>
@@ -66,8 +64,7 @@ const ProductsDb = () => {
             <tr key={product.product_id}>
               <td>{product.product_name}</td>
               <td>{product.product_size}</td>
-              <td>{product.product_category}</td>
-              <td>{product.par_level}</td>
+          
             </tr>
           ))}
         </tbody>

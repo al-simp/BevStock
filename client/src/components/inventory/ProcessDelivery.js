@@ -73,7 +73,6 @@ const ProcessDelivery = () => {
           <tr>
             <th>Product</th>
             <th>Size</th>
-            <th>Category</th>
             <th></th>
           </tr>
         </thead>
@@ -82,7 +81,6 @@ const ProcessDelivery = () => {
             <tr key={product.product_stocklist_id}>
               <td>{product.product_name}</td>
               <td>{product.product_size}</td>
-              <td>{product.product_category}</td>
 
               <td className="float-right">
                 <form

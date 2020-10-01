@@ -113,7 +113,7 @@ const Login = ({ setAuth }) => {
       localStorage.setItem("laststocktake", parseRes[0].stocktake_id);
       var next = moment(parseRes[0].stocktake_date).add(7, "days");
       localStorage.setItem(
-        "nodemoocktakedate",
+        "nextstocktakedate",
         moment(next).format("YYYY-MM-DDThh:mm:ss")
       );
     } catch (error) {
