@@ -1,7 +1,7 @@
 import React, { Fragment, useState } from "react";
 import _ from "lodash";
 import { toast } from "react-toastify";
-import Logo from "./images/Logo.png";
+import Logo from "../public/SignInLogo.png";
 import "../signin.css";
 import moment from "moment";
 
@@ -113,7 +113,7 @@ const Login = ({ setAuth }) => {
       localStorage.setItem("laststocktake", parseRes[0].stocktake_id);
       var next = moment(parseRes[0].stocktake_date).add(7, "days");
       localStorage.setItem(
-        "nextstocktakedate",
+        "nodemoocktakedate",
         moment(next).format("YYYY-MM-DDThh:mm:ss")
       );
     } catch (error) {
@@ -184,7 +184,7 @@ const Login = ({ setAuth }) => {
         <meta name="author" content="" />
         <link rel="icon" href="../../../../favicon.ico" />
 
-        <form className="form-signin" onSubmit={onSubmitform}>
+        <form className="form-signin mt-4" onSubmit={onSubmitform}>
           <img class="mb-4" src={Logo} alt="" width="100" height="100"></img>
           <h1 className="h3 mb-3 font-weight-normal">
             BevStock <br />

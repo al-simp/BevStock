@@ -39,7 +39,7 @@ const Nav = ({ setIsAuthenticated, isAuthenticated, name, userType }) => {
         {/* eslint-disable-next-line */}
         <a href="#" className="navbar-brand col-sm-3 col-md-2 mr-0">
           <img src={Logo} alt="BevStock" width="30" height="30" />
-          {"  "}BevStock
+          {"  "}<h4 className="float-right mb-0 mr-5">BevStock</h4>
         </a>
         <ul className="navbar-nav px-3">
           <li className="nav-item text-nowrap">
@@ -52,28 +52,28 @@ const Nav = ({ setIsAuthenticated, isAuthenticated, name, userType }) => {
       </nav>
       <nav className="col-md-2 d-none d-md-block bg-light sidebar">
         <div className="sidebar-sticky">
-          <ul className="nav flex-column">
-            <li className="nav-item">
+          <ul className="nav flex-column ml-3">
+            <li className="nav-item mt-3">
               <a className="nav-link" href={`/dashboard`}>
                 Dashboard <span className="sr-only">(current)</span>
               </a>
             </li>
-            <li className="nav-item">
+            <li className="nav-item mt-2">
               <a className="nav-link" href={`/stocktaking`}>
                 View/Edit Stock Areas
               </a>
             </li>
-            <li className="nav-item">
+            <li className="nav-item mt-2">
               <a className="nav-link" href="/stocktakelists">
                 Stocktaking
               </a>
             </li>
-            <li className="nav-item">
+            <li className="nav-item mt-2">
               <a className="nav-link" href={`/team`}>
                 Team Management
               </a>
             </li>
-            <li className="nav-item">
+            <li className="nav-item mt-2">
               <a
                 className="nav-link"
                 href={`/inventory/${localStorage.getItem("laststocktake")}`}
@@ -81,18 +81,18 @@ const Nav = ({ setIsAuthenticated, isAuthenticated, name, userType }) => {
                 Inventory
               </a>
             </li>
-            <li className="nav-item">
+            <li className="nav-item mt-2">
               <a className="nav-link" href={`/processdelivery`}>
                 Process Delivery
               </a>
             </li>
 
-            <li className="nav-item">
+            <li className="nav-item mt-2">
               <a className="nav-link" href={`/products`}>
                 Products Database
               </a>
             </li>
-            <li className="nav-item">
+            <li className="nav-item mt-2">
               <a className="nav-link" href={`/salesdata`}>
                 Sales Data
               </a>

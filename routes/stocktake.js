@@ -136,10 +136,10 @@ router.post("/productfromid/", async (req, res) => {
 // mark a stocklist as complete. 
 router.post("/markascomplete", async (req, res) => {
   try {
-    const { id, stocktakeInstance, message } = req.body;
+    const { id, stocktakeInstance} = req.body;
     const marksascomplete = await pool.query(
-      "UPDATE stocklist_stocktake_user SET completed = true, completed_message = $3 WHERE stocklist_id = $1 AND stocktake_id = $2",
-      [id, stocktakeInstance, message]
+      "UPDATE stocklist_stocktake_user SET completed = true WHERE stocklist_id = $1 AND stocktake_id = $2",
+      [id, stocktakeInstance]
     );
     res.json(marksascomplete);
   } catch {

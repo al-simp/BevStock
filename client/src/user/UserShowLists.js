@@ -23,6 +23,7 @@ const UserShowLists = ({
       });
       const parseRes = await response.json();
       setAssignedLists(parseRes);
+      console.log(parseRes);
       if (parseRes.length > 0) {
         setAssignedLists(parseRes);
       }
@@ -33,9 +34,8 @@ const UserShowLists = ({
 
   // mark the stocklist as complete when finished.
   const markComplete = async (id) => {
-    const message = document.getElementById(`${id}`).value;
     try {
-      const body = { id, stocktakeInstance, message };
+      const body = { id, stocktakeInstance };
       const response = await fetch("/stocktake/markascomplete", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -61,62 +61,39 @@ const UserShowLists = ({
         <div className="col">
           <h3 className="text-center mb-4">Your Assigned Stock Areas</h3>
           {assignedLists.map((list) => (
-            <table className="table table-bordered">
-              <tbody>
-                <tr key={list.stocklist_id}>
-                  <th className="text-center">{list.stocklist_name}</th>
-                </tr>
-                <tr>
-                  {!list.completed ? (
-                    <td>
-                      <Link
-                        to={`count/${list.stocklist_id}/${stocktakeInstance}`}
-                        className="btn btn-primary form-control"
-                      >
-                        Count
-                      </Link>
-                    </td>
-                  ) : null}
-                </tr>
-                <tr>
-                  <th className="text-center">Manager Message</th>
-                </tr>
-                <tr>
-                  <td className="text-center">{list.user_message}</td>
-                </tr>
+            <div key={list.stocklist_id} className="card">
+              <div className="card-body">
+                <h5 className="card-title">{list.stocklist_name}</h5>
+                <h6 className="card-subtitle mb-2 text-muted">
+                  Special Instructions
+                </h6>
+                <p className="card-text">{list.user_message}</p>
+                {!list.completed ? (
+                  <Link
+                    to={`count/${list.stocklist_id}/${stocktakeInstance}`}
+                    className="btn btn-primary"
+                  >
+                    Count
+                  </Link>
+                ) : null}
                 {list.completed ? (
                   <Fragment>
-                    <tr>
-                      <th className="text-center">Your Message</th>
-                    </tr>
-                    <td className="text-center">{list.completed_message}</td>
-                    <tr>
-                      <td className="text-center">Complete</td>
-                    </tr>
+                      <h6 className="text-success">Complete</h6>
                   </Fragment>
                 ) : (
-                  <Fragment>
-                    <td>
-                      <textarea
-                        className="form-control"
-                        id={`${list.stocklist_id}`}
-                        cols="40"
-                        rows="2"
-                      ></textarea>
-
-                      <button
-                        className="btn btn-success form-control"
+                  <Fragment> 
+                     <button
+                        className="btn btn-success ml-1"
                         onClick={(e) => {
                           markComplete(list.stocklist_id);
                         }}
                       >
                         Mark as complete
                       </button>
-                    </td>
                   </Fragment>
                 )}
-              </tbody>
-            </table>
+              </div>
+            </div>
           ))}
         </div>
       </div>
